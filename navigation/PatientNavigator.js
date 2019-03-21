@@ -1,8 +1,13 @@
 import React from 'react';
 import { createAppContainer, createDrawerNavigator } from 'react-navigation';
-import PatientScreen from '../screens/Patient';
 
+// Screens Import
+import PatientScreen from '../screens/Patient/ProfileScreen';
+import SearchScreen from '../screens/Patient/SearchScreen';
+import SettingsScreen from '../screens/Patient/SettingsScreen';
 
 export default createAppContainer(createDrawerNavigator({
-  Home: PatientScreen,
+  Profile: PatientScreen,
+  Search: SearchScreen,
+  Settings: SettingsScreen,
 }));
