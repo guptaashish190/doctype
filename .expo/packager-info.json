@@ -1,9 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 7824,
-  "expoServerNgrokUrl": "https://m8-mi6.anonymous.doctype.exp.direct",
-  "packagerNgrokUrl": "https://packager.m8-mi6.anonymous.doctype.exp.direct",
-  "ngrokPid": 11260
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "webpackServerPort": null
 }
