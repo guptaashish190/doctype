@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, NativeModules, Platform } from 'react-native';
+import { StyleSheet, TouchableHighlight } from 'react-native';
 import _ from 'lodash';
 import shortid from 'shortid';
-import Fonts from '../../constants/Fonts';
-import { Container, Content, Text, Header, Body, Col, Card, View, CardItem } from 'native-base';
-import { StatusBarHeight } from '../../constants/Layout'
+import { Text, Card, CardItem } from 'native-base';
 import Colors from '../../constants/Colors';
-import { bold } from 'ansi-colors';
 
 class BasicCard extends Component {
 
@@ -15,9 +12,12 @@ class BasicCard extends Component {
     convertToString = (val) => {
         if (val instanceof Date) {
             return val.toDateString();
+        } else if (val instanceof Array) {
+            return `${val[0]} ${val.length === 1 ? '' : `,${val.length - 1} more`}`;
         }
         return val;
     }
+
 
     getMappedDetails = () => {
         const listLength = Object.keys(this.props.cardInfo).length;
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         marginTop: 30,
         marginBottom: 10,
+        zIndex: 0
     },
     header: {
         backgroundColor: Colors.dark,

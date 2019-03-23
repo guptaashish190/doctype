@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image } from 'react-native'
 import { connect } from 'react-redux';
+import shortid from 'shortid';
 import { Container, Content, Text } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import BasicHeader from '../../components/BasicHeader';
@@ -21,6 +22,9 @@ class PatientProfile extends Component {
 
           {/* Basic Info */}
           <BasicCard cardInfo={this.props.basic} title="Basic" />
+          {this.props.current.map((elem) => <BasicCard key={shortid.generate()} cardInfo={elem} title="Current" />)}
+          {this.props.history.map((elem) => <BasicCard key={shortid.generate()} cardInfo={elem} title="History" />)}
+          <BasicCard key={shortid.generate()} cardInfo={this.props.contact} title="Contact" />
 
         </Content>
       </Container>
@@ -30,7 +34,8 @@ class PatientProfile extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: StatusBarHeight
+    marginTop: StatusBarHeight,
+    paddingBottom: 20
   },
   menuButton: {
     backgroundColor: 'transparent',
@@ -55,6 +60,9 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return ({
     basic: state.UserInfo.basic,
+    current: state.UserInfo.current,
+    history: state.UserInfo.history,
+    contact: state.UserInfo.contact,
     appSpec: state.UserInfo.appSpec
   })
 }
