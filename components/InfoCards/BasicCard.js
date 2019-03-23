@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, TouchableHighlight } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import _ from 'lodash';
 import shortid from 'shortid';
 import { Text, Card, CardItem } from 'native-base';
@@ -22,12 +22,14 @@ class BasicCard extends Component {
     getMappedDetails = () => {
         const listLength = Object.keys(this.props.cardInfo).length;
         return Object.keys(this.props.cardInfo).map((elem, index) => {
+
             return (
                 <CardItem style={[styles.cardElement, index === listLength - 1 ? { borderBottomWidth: 0 } : {}]} key={shortid.generate()}>
                     <Text style={styles.elementKey}>{_.startCase(elem)}: </Text>
                     <Text style={styles.elementValue}>{this.convertToString(this.props.cardInfo[elem])}</Text>
                 </CardItem>
             )
+
         });
     }
 
