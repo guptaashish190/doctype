@@ -4,8 +4,14 @@ const INITIAL_STATE = {
         name: 'Ashish Gupta',
         height: 170,
         weight: 75,
-        dob: new Date('06-02-1998'),
+        dob: new Date(1998, 2, 6),
         maritalStatus: 'Unmarried',
+    },
+    appSpec: {
+        profilePicture: {
+            local: '',
+            url: 'https://akm-img-a-in.tosshub.com/indiatoday/images/story/201804/RTX5L0IT.jpeg?qlnshqvD6xOuLhFcVvAqQ3OzqMM9ncYQ'
+        }
     },
     current: [
         {
@@ -35,9 +41,6 @@ const INITIAL_STATE = {
             problemid: 'Asthma',
         }
     ]
-
-
-
 };
 
 const UserInfoReducer = (state = INITIAL_STATE, action) => {
