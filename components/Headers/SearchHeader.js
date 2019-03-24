@@ -23,39 +23,44 @@ class SearchHeader extends Component {
     }
 
     onSearchEnable = () => {
-        this.setState({
-            searchEnable: true,
-            searchTextTranslateX: new Animated.Value(-30),
-            searchTextOpacity: new Animated.Value(0),
-        }, () => {
-            Animated.parallel([
-                Animated.timing(this.state.backTranslateX, {
-                    toValue: 0,
-                    duration: 600,
-                    useNativeDriver: true,
-                    easing: Easing.bezier(.16, .83, .23, 1.03)
-                }),
-                Animated.timing(this.state.backOpacity, {
-                    toValue: 1,
-                    duration: 600,
-                    useNativeDriver: true,
-                    easing: Easing.bezier(.16, .83, .23, 1.03)
-                }),
-                Animated.timing(this.state.searchBarLeft, {
-                    toValue: 0,
-                    duration: 600,
-                    useNativeDriver: true,
-                    easing: Easing.bezier(.16, .83, .23, 1.03)
-                }),
-                Animated.timing(this.state.searchBarOpacity, {
-                    toValue: 1,
-                    duration: 600,
-                    useNativeDriver: true,
-                    easing: Easing.bezier(.16, .83, .23, 1.03)
-                }),
+        if (this.state.searchEnable) {
+            this.props.onSearch();
+            this.onDisableSearch();
+        } else {
+            this.setState({
+                searchEnable: true,
+                searchTextTranslateX: new Animated.Value(-30),
+                searchTextOpacity: new Animated.Value(0),
+            }, () => {
+                Animated.parallel([
+                    Animated.timing(this.state.backTranslateX, {
+                        toValue: 0,
+                        duration: 600,
+                        useNativeDriver: true,
+                        easing: Easing.bezier(.16, .83, .23, 1.03)
+                    }),
+                    Animated.timing(this.state.backOpacity, {
+                        toValue: 1,
+                        duration: 600,
+                        useNativeDriver: true,
+                        easing: Easing.bezier(.16, .83, .23, 1.03)
+                    }),
+                    Animated.timing(this.state.searchBarLeft, {
+                        toValue: 0,
+                        duration: 600,
+                        useNativeDriver: true,
+                        easing: Easing.bezier(.16, .83, .23, 1.03)
+                    }),
+                    Animated.timing(this.state.searchBarOpacity, {
+                        toValue: 1,
+                        duration: 600,
+                        useNativeDriver: true,
+                        easing: Easing.bezier(.16, .83, .23, 1.03)
+                    }),
 
-            ]).start();
-        });
+                ]).start();
+            });
+        }
     }
 
     onDisableSearch = () => {
