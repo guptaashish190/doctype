@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, NativeModules, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Container, Content, Text } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import Colors from '../../constants/Colors';
