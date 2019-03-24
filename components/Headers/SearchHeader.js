@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { Header, Left, Body, Right, Button, Icon, Item, Input } from 'native-base';
+import { Header, Left, Body, Right, Button, Icon, Item, Input, Container, Text, Content } from 'native-base';
 import PropTypes from 'prop-types';
 import Colors from '../../constants/Colors';
 
 class SearchHeader extends Component {
 
     state = {
-        searchEnable: true,
+        searchEnable: false,
         searchValue: '',
     }
 
@@ -17,18 +17,31 @@ class SearchHeader extends Component {
 
     render() {
         return (
-            <Container>
-                <Header searchBar rounded>
-                    <Item>
-                        <Icon name="ios-search" />
-                        <Input placeholder="Search" />
-                        <Icon name="ios-people" />
-                    </Item>
-                    <Button transparent>
+            <Header style={styles.container}>
+                <Button onPress={() => this.onMenuPress()} style={styles.menuButton} >
+                    <Icon name='menu' style={{ color: Colors.primary }} />
+                </Button>
+                <Content contentContainerStyle={{ flexDirection: 'row', height: '100%', alignItems: 'center' }}>
+                    {this.state.searchEnable ?
+                        (
+                            <Input
+                                value={this.state.searchValue}
+                                onChangeText={text => this.setState({ searchValue: text })}
+                                style={styles.searchInput}
+                                placeholder="Search"
+                            />
+                        )
+                        :
                         <Text>Search</Text>
-                    </Button>
-                </Header>
-            </Container>
+                    }
+                </Content>
+                <Right>
+                    <TouchableOpacity onPress={() => this.setState({ searchEnable: true })}>
+                        <Icon style={{ marginLeft: 10 }} name="search" />
+                    </TouchableOpacity>
+                </Right>
+
+            </Header >
         );
     }
 }
@@ -40,6 +53,11 @@ SearchHeader.propTypes = {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: Colors.lightBlue,
+        width: '100%',
+        alignItems: 'center'
+    },
     menuButton: {
         paddingLeft: 0,
         backgroundColor: 'transparent',

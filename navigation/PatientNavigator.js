@@ -7,7 +7,7 @@ import SearchScreen from '../screens/Patient/SearchScreen';
 import SettingsScreen from '../screens/Patient/SettingsScreen';
 
 export default createAppContainer(createDrawerNavigator({
-  Profile: PatientScreen,
   Search: SearchScreen,
+  Profile: PatientScreen,
   Settings: SettingsScreen,
 }));

@@ -3,16 +3,18 @@ import { StyleSheet, NativeModules, Platform } from 'react-native';
 import { Container, Content, Text } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import Colors from '../../constants/Colors';
+import SearchHeader from '../../components/Headers/SearchHeader';
 
 class SearchScreen extends Component {
 
     render() {
         return (
             <Container style={styles.container}>
+                <SearchHeader title="Search" navigation={this.props.navigation} />
                 <Content>
                     <Text>
                         Search
-          </Text>
+                    </Text>
                 </Content>
             </Container>
         );
