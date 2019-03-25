@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import shortid from 'shortid';
 import { Container, Content, Text } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
-import BasicHeader from '../../components/Patient/BasicHeader';
+import BasicHeader from '../../components/Doctor/BasicHeader';
 import Colors from '../../constants/Colors';
 import BasicCard from '../../components/InfoCards/BasicCard';
 
-class PatientProfile extends Component {
+class DoctorScreen extends Component {
   render() {
     return (
       <Container style={styles.container}>
@@ -22,8 +22,7 @@ class PatientProfile extends Component {
 
           {/* Basic Info */}
           <BasicCard cardInfo={this.props.basic} title="Basic" />
-          {this.props.current.map((elem) => <BasicCard key={shortid.generate()} cardInfo={elem} title="Current" />)}
-          {this.props.history.map((elem) => <BasicCard key={shortid.generate()} cardInfo={elem} title="History" />)}
+          {/* {this.props.current.map((elem) => <BasicCard key={shortid.generate()} cardInfo={elem} title="Current" />)} */}
           <BasicCard key={shortid.generate()} cardInfo={this.props.contact} title="Contact" />
 
         </Content>
@@ -59,12 +58,15 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return ({
-    basic: state.UserInfo.basic,
-    current: state.UserInfo.current,
-    history: state.UserInfo.history,
-    contact: state.UserInfo.contact,
-    appSpec: state.UserInfo.appSpec
+    basic: state.TestDoctor.basic,
+    qualifications: state.TestDoctor.qualifications,
+    currentPatients: state.TestDoctor.currentPatients,
+    allPatients: state.TestDoctor.allPatients,
+    clinic: state.TestDoctor.clinic,
+    hospital: state.TestDoctor.hospital,
+    contact: state.TestDoctor.contact,
+    appSpec: state.TestDoctor.appSpec
   })
 }
 
-export default connect(mapStateToProps)(PatientProfile)
+export default connect(mapStateToProps)(DoctorScreen)

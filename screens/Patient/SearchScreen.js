@@ -6,9 +6,9 @@ import shortid from 'shortid';
 
 import { StatusBarHeight } from '../../constants/Layout';
 import Colors from '../../constants/Colors';
-import SearchHeader from '../../components/Headers/SearchHeader';
+import SearchHeader from '../../components/Patient/Headers/SearchHeader';
 import config from '../../config';
-import DoctorSearchCard from '../../components/DoctorSearchCard';
+import DoctorSearchCard from '../../components/Patient/DoctorSearchCard';
 
 class SearchScreen extends Component {
     state = {

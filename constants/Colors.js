@@ -4,4 +4,8 @@ export default {
   dark: '#23221E',
   primary: "#173761",
   secondary: '#3A6D94',
+  doctorColors: {
+    primary: "#51a5ff",
+    secondary: '#ff515f'
+  }
 };

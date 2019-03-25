@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux';
+
+// Reducers
 import UserInfoReducer from './UserInfoReducer';
+import TestDoctorReducer from './TestDoctorReducer';
 
 export default combineReducers({
-    UserInfo: UserInfoReducer
+    UserInfo: UserInfoReducer,
+    TestDoctor: TestDoctorReducer
 });

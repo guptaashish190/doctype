@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Animated, Easing } from 'react-native';
 import { Card, CardItem, Text } from 'native-base';
-import { StatusBarHeight } from '../constants/Layout';
-import Colors from '../constants/Colors';
+import { StatusBarHeight } from '../../constants/Layout';
+import Colors from '../../constants/Colors';
 class DoctorSearchCard extends Component {
 
     state = {
@@ -13,12 +13,9 @@ class DoctorSearchCard extends Component {
         Animated.timing(this.state.contOpacity, {
             toValue: 1,
             useNativeDriver: true,
-            duration: 1000,
+            duration: 600,
             easing: Easing.bezier(.16, .83, .23, 1.03)
         }).start();
-    }
-    componentWillMount() {
-        console.log('Mounter');
     }
 
     render() {
@@ -79,7 +76,8 @@ const styles = StyleSheet.create({
     headText: {
         padding: 10,
         color: Colors.primary,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontSize: 19
     },
     infoText: {
         fontSize: 13,
@@ -105,6 +103,7 @@ const styles = StyleSheet.create({
     right: {
         color: '#4c9fff',
         fontWeight: 'bold',
+        fontSize: 12,
         padding: 10,
     },
     bottom: {
