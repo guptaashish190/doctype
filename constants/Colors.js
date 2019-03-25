@@ -6,6 +6,7 @@ export default {
   secondary: '#3A6D94',
   doctorColors: {
     primary: "#51a5ff",
+    lightPrimary: '#c1dfff',
     secondary: '#ff515f'
   }
 };

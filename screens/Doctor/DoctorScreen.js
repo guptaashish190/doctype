@@ -5,8 +5,9 @@ import shortid from 'shortid';
 import { Container, Content, Text } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import BasicHeader from '../../components/Doctor/BasicHeader';
+import MapCard from '../../components/Doctor/MapCard';
 import Colors from '../../constants/Colors';
-import BasicCard from '../../components/InfoCards/BasicCard';
+import BasicCard from '../../components/Doctor/BasicCard';
 
 class DoctorScreen extends Component {
   render() {
@@ -22,6 +23,18 @@ class DoctorScreen extends Component {
 
           {/* Basic Info */}
           <BasicCard cardInfo={this.props.basic} title="Basic" />
+          <MapCard
+            title="Clinic"
+            name={this.props.clinic.name}
+            longitude={this.props.clinic.location[0]}
+            latitude={this.props.clinic.location[1]}
+          />
+          <MapCard
+            title="Hospital"
+            name={this.props.hospital.name}
+            longitude={this.props.hospital.location[0]}
+            latitude={this.props.hospital.location[1]}
+          />
           {/* {this.props.current.map((elem) => <BasicCard key={shortid.generate()} cardInfo={elem} title="Current" />)} */}
           <BasicCard key={shortid.generate()} cardInfo={this.props.contact} title="Contact" />
 

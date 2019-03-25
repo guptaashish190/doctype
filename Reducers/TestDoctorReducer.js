@@ -30,17 +30,22 @@ const INITIAL_STATE = {
         "MD Gynaecology",
         "MBBS"
     ],
-    clinic: [
-        80.20186,
-        13.07209
-    ],
-    hospital: [
-        80.20186,
-        13.07209
-    ],
-    type: "Doctor"
+    clinic: {
+        name: 'Some Healthcare Camily Clinic',
+        location: [
+            80.20186,
+            13.07209
+        ]
+    },
+    hospital: {
+        name: 'GSVM Hospital',
+        location: [
+            80.20186,
+            13.07209
+        ],
+        type: "Doctor"
+    }
 }
-
 const TestDoctorReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         default:
