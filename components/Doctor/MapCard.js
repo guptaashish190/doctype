@@ -4,11 +4,11 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import _ from 'lodash';
 import shortid from 'shortid';
 import { Text, Card, CardItem } from 'native-base';
+
 import Colors from '../../constants/Colors';
-import { MapView } from 'expo';
+import { MapView, Marker } from 'expo';
 
-class BasicCard extends Component {
-
+class MapCard extends Component {
 
     render() {
         return (
@@ -28,7 +28,13 @@ class BasicCard extends Component {
                             longitudeDelta: this.props.longitudeDelta || 0.04,
                             latitudeDelta: this.props.latitudeDelta || 0.04,
                         }}
-                    />
+                    >
+                        <MapView.Marker
+                            title={this.props.title}
+                            description=""
+                            coordinate={{ longitude: this.props.longitude, latitude: this.props.latitude }}
+                        />
+                    </MapView>
                 </CardItem>
 
             </Card>
@@ -37,7 +43,7 @@ class BasicCard extends Component {
 }
 
 // PropTypes
-BasicCard.propTypes = {
+MapCard.propTypes = {
     title: PropTypes.string.isRequired,
     name: PropTypes.string,
     latitude: PropTypes.number.isRequired,
@@ -96,4 +102,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default BasicCard
+export default MapCard

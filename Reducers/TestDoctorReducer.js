@@ -2,7 +2,7 @@ const INITIAL_STATE = {
     basic: {
         name: "Manisha Gupta",
         dob: "1998-02-05T18:30:00.000Z",
-        maritalStatus: "UnMarried"
+        maritalStatus: "Unmarried"
     },
     appSpec: {
         profilePicture: {

@@ -26,6 +26,10 @@ class Login extends Component {
     }
   }
 
+  onNewUserClick = () => {
+    this.props.navigation.navigate('NewUser');
+  }
+
   render() {
     return (
       <Container style={styles.container}>
@@ -60,8 +64,10 @@ class Login extends Component {
             </View>
             <View>
               <Button onPress={() => this.onLoginClick()} style={styles.loginButton}><Text style={styles.loginText}>Login</Text></Button>
+
             </View>
           </View>
+          <Button style={styles.newButton} onPress={() => this.onNewUserClick()}><Text style={styles.newText}>New User</Text></Button>
         </Content>
       </Container >
     );
@@ -90,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderBottomLeftRadius: 20,
     borderTopRightRadius: 20,
-    elevation: 5
+    elevation: 5,
   },
   textBox: {
     width: '90%',
@@ -128,6 +134,18 @@ const styles = StyleSheet.create({
   typeText: {
     fontSize: 25,
 
+  },
+  newButton: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    backgroundColor: 'transparent',
+    elevation: 0,
+  },
+  newText: {
+    color: '#777',
+    fontStyle: 'italic',
+    textDecorationLine: 'underline',
   }
 });
 
