@@ -40,6 +40,9 @@ class BasicInfoScreen extends Component {
             dob: date
         });
     }
+    onNextPress = () => {
+        this.props.navigation.navigate('SelectClinic');
+    }
 
     render() {
         return (
@@ -48,7 +51,7 @@ class BasicInfoScreen extends Component {
                     <Content style={{ width: '100%' }} contentContainerStyle={styles.content}>
                         <Text style={styles.title}>
                             Fill out your basic info
-                    </Text>
+                        </Text>
                         <View style={styles.inputContainer}>
                             <Item style={[styles.input, styles.item]} rounded>
                                 <Input
@@ -96,7 +99,7 @@ class BasicInfoScreen extends Component {
                                 />
                             </Item>
                         </View>
-                        <TouchableOpacity style={styles.nextButtonContainer} activeOpacity={0.8}>
+                        <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
                             <Icon name="md-arrow-round-forward" style={styles.nextButton} />
                         </TouchableOpacity>
                     </Content>
