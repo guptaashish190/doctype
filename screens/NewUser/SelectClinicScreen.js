@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, NativeModules, Platform, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, NativeModules, Platform, View, TouchableOpacity, Animated, Easing } from 'react-native';
 import { MapView } from 'expo';
 import { Container, Content, Text, Input, Item, Icon } from 'native-base';
 import shortid from 'shortid';
@@ -19,10 +19,34 @@ class SelectClinicScreen extends Component {
         userLongitude: null,
         selectedPlaceTitle: '',
         selectedPlaceDesc: '',
+        titleOpacity: new Animated.Value(0),
+        mainOpacity: new Animated.Value(0),
     }
 
     componentWillMount() {
         this.getUserLocation();
+    }
+
+
+    componentDidMount() {
+
+        Animated.sequence([
+            Animated.timing(this.state.titleOpacity, {
+                delay: 400,
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+                easing: Easing.bezier(.16, .83, .23, 1.03)
+            }),
+            Animated.timing(this.state.mainOpacity, {
+                toValue: 1,
+                duration: 700,
+                useNativeDriver: true,
+                easing: Easing.bezier(.16, .83, .23, 1.03)
+            })
+
+        ]).start();
+
     }
 
     getSuggestions = text => {
@@ -79,16 +103,39 @@ class SelectClinicScreen extends Component {
     }
 
     onNextPress = () => {
-        this.props.navigation.navigate('SelectHospital');
+        const userInfo = this.props.navigation.getParam('userInfo', {});
+
+        this.props.navigation.navigate('SelectHospital', {
+            userInfo: {
+                ...userInfo,
+                clinic: {
+                    name: this.state.selectedPlaceTitle,
+                    location: [this.state.userLongitude, this.state.userLatitude]
+                }
+            }
+        });
     }
 
     render() {
+        const TitleAnimatedStyle = {
+            opacity: this.state.titleOpacity,
+            transform: [{
+                translateX: this.state.titleOpacity.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [100, 0]
+                })
+            }]
+        }
+        const MainAnimatedStyle = {
+            opacity: this.state.mainOpacity,
+        }
+
         return (
             <Container style={styles.container}>
                 <Content style={{ width: '100%' }} contentContainerStyle={styles.content}>
-                    <Text style={styles.title}>
+                    <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
                         Locate Your Clinic
-                    </Text>
+                    </Animated.Text>
                     {/* Use Places Api */}
                     {/* <View style={styles.searchContainer}>
                         <Item rounded>
@@ -105,44 +152,46 @@ class SelectClinicScreen extends Component {
                                 )} />
                         </View>
                     </View> */}
-                    {this.state.userLatitude ?
-                        (
-                            <MapView
-                                style={styles.map}
-                                initialRegion={{
-                                    latitude: this.state.userLatitude,
-                                    longitude: this.state.userLongitude,
-                                    longitudeDelta: 0.04,
-                                    latitudeDelta: 0.04,
-                                }}
-                                customMapStyle={MapThemes.dark}
-                                onPress={e => this.onMapTap(e)}
-                            >
-                                <MapView.Marker
-                                    title={this.state.selectedPlaceTitle}
-                                    description={this.state.selectedPlaceDesc}
-                                    coordinate={{ longitude: this.state.userLongitude, latitude: this.state.userLatitude }}
-                                />
-                            </MapView>
-                        )
-                        :
-                        <View style={styles.map} />
-                    }
-                    {this.state.userLatitude ?
+                    <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
+                        {this.state.userLatitude ?
+                            (
+                                <MapView
+                                    style={styles.map}
+                                    initialRegion={{
+                                        latitude: this.state.userLatitude,
+                                        longitude: this.state.userLongitude,
+                                        longitudeDelta: 0.04,
+                                        latitudeDelta: 0.04,
+                                    }}
+                                    customMapStyle={MapThemes.dark}
+                                    onPress={e => this.onMapTap(e)}
+                                >
+                                    <MapView.Marker
+                                        title={this.state.selectedPlaceTitle}
+                                        description={this.state.selectedPlaceDesc}
+                                        coordinate={{ longitude: this.state.userLongitude, latitude: this.state.userLatitude }}
+                                    />
+                                </MapView>
+                            )
+                            :
+                            <View style={styles.map} />
+                        }
+                        {this.state.userLatitude ?
 
 
-                        <View style={styles.status}>
-                            <Text style={styles.statusText}>Lat: {this.state.userLatitude}</Text>
-                            <Text style={styles.statusText}>Long: {this.state.userLongitude}</Text>
-                        </View> :
-                        null
-                    }
-                    <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
-                        <Icon name="md-arrow-round-forward" style={styles.nextButton} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.skipContainer}>
-                        <Text style={styles.skipText}>Skip</Text>
-                    </TouchableOpacity>
+                            <View style={styles.status}>
+                                <Text style={styles.statusText}>Lat: {this.state.userLatitude}</Text>
+                                <Text style={styles.statusText}>Long: {this.state.userLongitude}</Text>
+                            </View> :
+                            null
+                        }
+                        <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                            <Icon name="md-arrow-round-forward" style={styles.nextButton} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.skipContainer}>
+                            <Text style={styles.skipText}>Skip</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
                 </Content>
             </Container>
         );
@@ -161,12 +210,18 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         color: Colors.primary,
+        alignSelf: 'flex-start',
     },
     content: {
         justifyContent: 'space-around',
         alignItems: 'center',
         flex: 1,
         padding: 50,
+    },
+    mainContainer: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-around',
     },
     searchContainer: {
         width: '100%',
