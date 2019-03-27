@@ -10,9 +10,9 @@ import SelectProfilePicScreen from '../screens/NewUser/SelectProfilePicScreen';
 import AddQualificationsSpecScreen from '../screens/NewUser/AddQualificationsSpecScreen';
 
 export default createAppContainer(createStackNavigator({
-    SelectProfilePic: SelectProfilePicScreen,
     BasicInfo: BasicInfoScreen,
     Start: StartScreen,
+    SelectProfilePic: SelectProfilePicScreen,
     SelectClinic: SelectClinicScreen,
     AddQualificationsSpec: AddQualificationsSpecScreen,
     SelectHospital: SelectHospitalScreen,

@@ -99,13 +99,15 @@ class BasicInfoScreen extends Component {
                         <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
                             <View style={styles.inputContainer}>
                                 <Item style={[styles.input, styles.item]} rounded>
+                                    <Icon name="person" style={styles.icon} />
                                     <Input
                                         placeholder="Name"
                                         value={this.state.name}
                                         onChangeText={text => this.setState({ name: text })}
                                     />
                                 </Item>
-                                <View style={[styles.datePicker, styles.item]}>
+                                <Item rounded style={[styles.datePicker, styles.item]}>
+                                    <Icon name="calendar" style={styles.icon} />
                                     <DatePicker
                                         defaultDate={new Date(2018, 4, 4)}
                                         minimumDate={new Date(2018, 1, 1)}
@@ -121,14 +123,17 @@ class BasicInfoScreen extends Component {
                                         onDateChange={(date) => this.setDate(date)}
                                         disabled={false}
                                     />
-                                </View>
-                                <TouchableOpacity style={[styles.datePicker, styles.item]} onPress={() => this.onMStatus()}>
-
-                                    <Text style={{ padding: 8, color: '#666' }}>
-                                        {this.state.mStatus}
-                                    </Text>
-                                </TouchableOpacity>
+                                </Item>
+                                <Item style={[styles.datePicker, styles.item]} rounded>
+                                    <Icon name="people" style={styles.icon} />
+                                    <TouchableOpacity onPress={() => this.onMStatus()}>
+                                        <Text style={{ padding: 8, color: '#666' }}>
+                                            {this.state.mStatus}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </Item>
                                 <Item style={[styles.input, styles.item]} rounded>
+                                    <Icon name="call" style={styles.icon} />
                                     <Input
                                         value={this.state.phone}
                                         onChangeText={text => this.setState({ phone: text })}
@@ -137,6 +142,7 @@ class BasicInfoScreen extends Component {
                                 </Item>
 
                                 <Item style={[styles.input, styles.item]} rounded>
+                                    <Icon name="mail" style={styles.icon} />
                                     <Input
                                         placeholder="Email"
                                         value={this.state.email}
@@ -185,6 +191,9 @@ const styles = StyleSheet.create({
         marginTop: 50,
         width: '100%',
         alignItems: 'center'
+    },
+    icon: {
+        color: '#605eff'
     },
     input: {
         width: '100%',
