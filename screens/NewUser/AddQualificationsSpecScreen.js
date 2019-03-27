@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity, ScrollView, Animated, Easing } from 'react-native';
 import { Container, Content, Text, Input, Item, Card, CardItem, Icon, List, ListItem, Title } from 'native-base';
 import shortid from 'shortid';
 import { StatusBarHeight } from '../../constants/Layout'
 import Colors from '../../constants/Colors';
 import suggestions from './QualificationsList';
-
+import { setUser } from '../../Actions/NewUserActions';
 
 class AddQualificationsSpecScreen extends Component {
 
@@ -84,6 +85,19 @@ class AddQualificationsSpecScreen extends Component {
 
     }
 
+    onNextPress = (next) => {
+        const userInfo = this.props.navigation.getParam('userInfo', {});
+        userInfo.qualifications = next ? this.state.added : null
+        userInfo.type = 'Doctor'
+        const doctor = {
+            user: userInfo,
+            type: 'Doctor'
+        }
+        console.log(user);
+        this.props.setUser(user);
+        this.props.navigation.navigate('Doctor');
+    }
+
     render() {
 
         const TitleAnimatedStyle = {
@@ -107,7 +121,7 @@ class AddQualificationsSpecScreen extends Component {
                     </Animated.Text>
 
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
-                        <View>
+                        <View style={{ flex: 0.2 }}>
                             <Item style={styles.input} rounded>
 
                                 <Input
@@ -132,11 +146,18 @@ class AddQualificationsSpecScreen extends Component {
                                 null
                             }
                         </View>
-                        <View style={styles.listContainer}>
-                            <ScrollView>
+                        <ScrollView style={styles.listContainer}>
+                            <View style={{ width: '100%' }}>
                                 {this.getListItems()}
-                            </ScrollView>
-                        </View>
+                            </View>
+                        </ScrollView>
+
+                        <TouchableOpacity onPress={() => this.onNextPress(true)} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                            <Icon name="md-arrow-round-forward" style={styles.nextButton} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.skipContainer}>
+                            <Text onPress={() => this.onNextPress(false)} style={styles.skipText}>Skip</Text>
+                        </TouchableOpacity>
                     </Animated.View>
 
                 </Content>
@@ -164,8 +185,9 @@ const styles = StyleSheet.create({
         padding: 50,
     },
     mainContainer: {
-        flex: 1,
+        alignItems: 'center',
         width: '100%',
+        flex: 1,
         marginTop: 30,
         position: 'relative'
     },
@@ -174,8 +196,10 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     listContainer: {
+        flex: 0.3,
+        width: '100%',
         marginTop: 20,
-        height: 400,
+        height: 300,
         overflow: 'scroll'
     },
     listItem: {
@@ -205,10 +229,42 @@ const styles = StyleSheet.create({
         paddingRight: 8,
         paddingBottom: 8,
         paddingTop: 8,
+    },
+    nextButton: {
+        color: 'white',
+        fontSize: 34,
+    },
+    nextButtonContainer: {
+        flex: 0.3,
+        marginTop: 20,
+        backgroundColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 50,
+        width: 100,
+        height: 100,
+    },
+    skipContainer: {
+        flex: 0.1,
+        width: '100%',
+    },
+    skipText: {
+        alignSelf: 'flex-end',
+        fontSize: 15,
+        color: '#aaa',
+        fontWeight: 'bold',
+        borderColor: '#aaa',
+        borderBottomWidth: 1,
     }
 });
 
-export default AddQualificationsSpecScreen
+const mapDispatchToProps = (dispatch) => {
+    return ({
+        setUser: user => dispatch(setUser(user))
+    });
+}
+
+export default connect(null, mapDispatchToProps)(AddQualificationsSpecScreen)
 
 class FormattedQualification extends Component {
 

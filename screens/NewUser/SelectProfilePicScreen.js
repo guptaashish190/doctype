@@ -38,17 +38,22 @@ class SelectProfilePicScreen extends Component {
 
     }
 
-    onNextPress = () => {
+    onNextPress = (next) => {
         const userInfo = this.props.navigation.getParam('userInfo', {});
 
         this.props.navigation.navigate('AddQualificationsSpec', {
             userInfo: {
                 ...userInfo,
-                profilePicture: {
-                    url: '',
-                    local: this.state.selectedImage
+                appSpec: {
+                    profilePicture: next ? {
+                        url: null,
+                        local: this.state.selectedImage
+                    } :
+                        {
+                            url: null,
+                            local: null
+                        }
                 }
-
             }
         });
     }
@@ -126,10 +131,10 @@ class SelectProfilePicScreen extends Component {
                             <TouchableNativeFeedback onPress={() => this.onChooseImage()}>
                                 <Image style={styles.mainImage} source={{ uri: this.state.selectedImage || DEFAULT_IMAGE_URI }} />
                             </TouchableNativeFeedback>
-                            <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                            <TouchableOpacity onPress={() => this.onNextPress(true)} style={styles.nextButtonContainer} activeOpacity={0.8}>
                                 <Icon name="md-arrow-round-forward" style={styles.nextButton} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.skipContainer}>
+                            <TouchableOpacity onPress={() => this.onNextPress(false)} style={styles.skipContainer}>
                                 <Text style={styles.skipText}>Skip</Text>
                             </TouchableOpacity>
                         </Animated.View>

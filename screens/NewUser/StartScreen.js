@@ -7,13 +7,13 @@ class StartScreen extends Component {
 
     onPress = (type) => {
         if (type === 'D') {
-            this.props.navigation.navigate('BasicInfo', {
+            this.props.navigation.navigate('UNPass', {
                 userInfo: {
                     type: 'Doctor'
                 }
             });
         } else {
-            this.props.navigation.navigate('BasicInfo', {
+            this.props.navigation.navigate('UNPass', {
                 userInfo: {
                     type: 'Patient'
                 }

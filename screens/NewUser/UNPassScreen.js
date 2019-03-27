@@ -5,18 +5,12 @@ import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 import { StatusBarHeight } from '../../constants/Layout';
 
-var BUTTONS = ["Married", 'Unmarried'];
-var DESTRUCTIVE_INDEX = 3;
-var CANCEL_INDEX = 4;
-
-class BasicInfoScreen extends Component {
+class UsernamePasswordScreen extends Component {
 
     state = {
-        name: '',
-        phone: '',
-        email: '',
-        dob: '',
-        mStatus: 'Unmarried',
+        userName: '',
+        pass: '',
+        rePass: '',
         titleOpacity: new Animated.Value(0),
         mainOpacity: new Animated.Value(0),
     }
@@ -40,37 +34,13 @@ class BasicInfoScreen extends Component {
         ]).start();
     }
 
-    onMStatus = () => {
-        ActionSheet.show(
-            {
-                options: BUTTONS,
-                cancelButtonIndex: CANCEL_INDEX,
-                destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                title: "Marital Status"
-            },
-            buttonIndex => {
-                if (buttonIndex !== 4) {
-                    this.setState({ mStatus: BUTTONS[buttonIndex] });
-                }
-            }
-        )
-    }
-
-    setDate = (date) => {
-        this.setState({
-            dob: date
-        });
-    }
     onNextPress = () => {
         const userInfo = this.props.navigation.getParam("userInfo", {});
-        this.props.navigation.navigate('SelectClinic', {
+        this.props.navigation.navigate('BasicInfo', {
             userInfo: {
                 ...userInfo,
-                name: this.state.name,
-                phone: this.state.phone,
-                email: this.state.email,
-                dob: this.state.dob,
-                mStatus: this.state.mStatus
+                username: this.state.userName,
+                pass: this.state.pass
             }
         });
     }
@@ -94,59 +64,34 @@ class BasicInfoScreen extends Component {
                 <Container style={styles.container}>
                     <Content style={{ width: '100%' }} contentContainerStyle={styles.content}>
                         <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
-                            {`Fill out\nyour basic info`}
+                            {`Type in your\nCredentials`}
                         </Animated.Text>
                         <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
                             <View style={styles.inputContainer}>
                                 <Item style={[styles.input, styles.item]} rounded>
                                     <Icon name="person" style={styles.icon} />
                                     <Input
-                                        placeholder="Name"
-                                        value={this.state.name}
-                                        onChangeText={text => this.setState({ name: text })}
+                                        placeholder="Username"
+                                        value={this.state.userName}
+                                        onChangeText={text => this.setState({ userName: text })}
                                     />
                                 </Item>
-                                <Item rounded style={[styles.datePicker, styles.item]}>
-                                    <Icon name="calendar" style={styles.icon} />
-                                    <DatePicker
-                                        defaultDate={new Date(2018, 4, 4)}
-                                        minimumDate={new Date(2018, 1, 1)}
-                                        maximumDate={new Date(2018, 12, 31)}
-                                        locale={"en"}
-                                        timeZoneOffsetInMinutes={undefined}
-                                        modalTransparent={false}
-                                        animationType={"fade"}
-                                        androidMode={"default"}
-                                        placeHolderText="Date of birth"
-                                        textStyle={{ color: "#444" }}
-                                        placeHolderTextStyle={{ color: "#666" }}
-                                        onDateChange={(date) => this.setDate(date)}
-                                        disabled={false}
+                                <Item style={[styles.input, styles.item]} rounded>
+                                    <Icon name="lock" style={styles.icon} />
+                                    <Input
+                                        secureTextEntry
+                                        placeholder="Password"
+                                        value={this.state.pass}
+                                        onChangeText={text => this.setState({ pass: text })}
                                     />
                                 </Item>
-                                <Item style={[styles.datePicker, styles.item]} rounded>
-                                    <Icon name="people" style={styles.icon} />
-                                    <TouchableOpacity onPress={() => this.onMStatus()}>
-                                        <Text style={{ padding: 8, color: '#666' }}>
-                                            {this.state.mStatus}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </Item>
                                 <Item style={[styles.input, styles.item]} rounded>
-                                    <Icon name="call" style={styles.icon} />
+                                    <Icon name="lock" style={styles.icon} />
                                     <Input
-                                        value={this.state.phone}
-                                        onChangeText={text => this.setState({ phone: text })}
-                                        keyboardType="numeric"
-                                        placeholder="Phone Number" />
-                                </Item>
-
-                                <Item style={[styles.input, styles.item]} rounded>
-                                    <Icon name="mail" style={styles.icon} />
-                                    <Input
-                                        placeholder="Email"
-                                        value={this.state.email}
-                                        onChangeText={text => this.setState({ email: text })}
+                                        secureTextEntry
+                                        placeholder="Retype Password"
+                                        value={this.state.rePass}
+                                        onChangeText={text => this.setState({ rePass: text })}
                                     />
                                 </Item>
                             </View>
@@ -199,13 +144,6 @@ const styles = StyleSheet.create({
         width: '100%',
         padding: 5,
     },
-    datePicker: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 50,
-        padding: 8,
-    },
     item: {
         margin: 10,
     },
@@ -225,4 +163,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default BasicInfoScreen;
+export default UsernamePasswordScreen;

@@ -6,7 +6,7 @@ import shortid from 'shortid';
 import { StatusBarHeight } from '../../constants/Layout'
 import Colors from '../../constants/Colors';
 import MapThemes from '../../constants/MapThemes';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TextInput } from 'react-native-gesture-handler';
 import config from '../../config';
 import Axios from 'axios';
 
@@ -102,20 +102,21 @@ class SelectClinicScreen extends Component {
         });
     }
 
-    onNextPress = () => {
+    onNextPress = (next) => {
         const userInfo = this.props.navigation.getParam('userInfo', {});
 
         this.props.navigation.navigate('SelectHospital', {
             userInfo: {
                 ...userInfo,
-                clinic: {
+                clinic: next ? {
                     name: this.state.selectedPlaceTitle,
                     location: [this.state.userLongitude, this.state.userLatitude]
                 }
+                    :
+                    null
             }
         });
     }
-
     render() {
         const TitleAnimatedStyle = {
             opacity: this.state.titleOpacity,
@@ -153,6 +154,14 @@ class SelectClinicScreen extends Component {
                         </View>
                     </View> */}
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
+
+                        <Item rounded>
+                            <Input
+                                onChangeText={t => this.setState({ selectedPlaceTitle: t })}
+                                placeholder="Place Name"
+                                value={this.state.selectedPlaceTitle}
+                            />
+                        </Item>
                         {this.state.userLatitude ?
                             (
                                 <MapView
@@ -185,10 +194,10 @@ class SelectClinicScreen extends Component {
                             </View> :
                             null
                         }
-                        <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                        <TouchableOpacity onPress={() => this.onNextPress(true)} style={styles.nextButtonContainer} activeOpacity={0.8}>
                             <Icon name="md-arrow-round-forward" style={styles.nextButton} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.skipContainer}>
+                        <TouchableOpacity onPres={() => this.onNextPress(false)} style={styles.skipContainer}>
                             <Text style={styles.skipText}>Skip</Text>
                         </TouchableOpacity>
                     </Animated.View>
@@ -219,6 +228,7 @@ const styles = StyleSheet.create({
         padding: 50,
     },
     mainContainer: {
+        marginTop: 40,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-around',

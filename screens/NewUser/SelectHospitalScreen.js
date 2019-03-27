@@ -27,7 +27,6 @@ class SelectHospitalScreen extends Component {
         this.getUserLocation();
     }
 
-
     componentDidMount() {
 
         Animated.sequence([
@@ -102,16 +101,18 @@ class SelectHospitalScreen extends Component {
         });
     }
 
-    onNextPress = () => {
+    onNextPress = (next) => {
         const userInfo = this.props.navigation.getParam('userInfo', {});
 
         this.props.navigation.navigate('SelectProfilePic', {
             userInfo: {
                 ...userInfo,
-                hospital: {
+                hospital: next ? {
                     name: this.state.selectedPlaceTitle,
                     location: [this.state.userLongitude, this.state.userLatitude]
                 }
+                    :
+                    null
             }
         });
     }
@@ -154,6 +155,14 @@ class SelectHospitalScreen extends Component {
                     </View> */}
 
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
+
+                        <Item rounded>
+                            <Input
+                                onChangeText={t => this.setState({ selectedPlaceTitle: t })}
+                                placeholder="Place Name"
+                                value={this.state.selectedPlaceTitle}
+                            />
+                        </Item>
                         {this.state.userLatitude ?
                             (
                                 <MapView
@@ -186,10 +195,10 @@ class SelectHospitalScreen extends Component {
                             </View> :
                             null
                         }
-                        <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                        <TouchableOpacity onPress={() => this.onNextPress(true)} style={styles.nextButtonContainer} activeOpacity={0.8}>
                             <Icon name="md-arrow-round-forward" style={styles.nextButton} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.skipContainer}>
+                        <TouchableOpacity onPress={() => this.onNextPress(false)} style={styles.skipContainer}>
                             <Text style={styles.skipText}>Skip</Text>
                         </TouchableOpacity>
                     </Animated.View>
@@ -220,6 +229,7 @@ const styles = StyleSheet.create({
         padding: 50,
     },
     mainContainer: {
+        marginTop: 80,
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-around',
