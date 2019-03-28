@@ -156,6 +156,7 @@ class SelectClinicScreen extends Component {
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
 
                         <Item rounded>
+                            <Icon name="navigate" style={{ color: '#605eff' }} />
                             <Input
                                 onChangeText={t => this.setState({ selectedPlaceTitle: t })}
                                 placeholder="Place Name"

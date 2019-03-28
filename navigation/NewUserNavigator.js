@@ -11,11 +11,11 @@ import AddQualificationsSpecScreen from '../screens/NewUser/AddQualificationsSpe
 import UsernamePasswordScreen from '../screens/NewUser/UNPassScreen';
 
 export default createAppContainer(createStackNavigator({
+    SelectHospital: SelectHospitalScreen,
     Start: StartScreen,
     SelectProfilePic: SelectProfilePicScreen,
     AddQualificationsSpec: AddQualificationsSpecScreen,
     UNPass: UsernamePasswordScreen,
-    SelectHospital: SelectHospitalScreen,
     SelectClinic: SelectClinicScreen,
     BasicInfo: BasicInfoScreen,
 }, {

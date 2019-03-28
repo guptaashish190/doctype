@@ -132,7 +132,7 @@ class AddQualificationsSpecScreen extends Component {
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
                         <View style={{ flex: 0.2 }}>
                             <Item style={styles.input} rounded>
-
+                                <Icon name="medal" style={{ color: '#605eff' }} />
                                 <Input
                                     placeholder="Type Here"
                                     value={this.state.currentValue}
