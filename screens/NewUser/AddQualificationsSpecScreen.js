@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity, ScrollView, Animated, Easing } from 'react-native';
 import { Container, Content, Text, Input, Item, Card, CardItem, Icon, List, ListItem, Title } from 'native-base';
 import shortid from 'shortid';
+import Axios from 'axios';
+import config from '../../config';
 import { StatusBarHeight } from '../../constants/Layout'
 import Colors from '../../constants/Colors';
 import suggestions from './QualificationsList';
-import { setUser } from '../../Actions/NewUserActions';
+import NewUserActions from '../../Actions/NewUserActions';
 
 class AddQualificationsSpecScreen extends Component {
 
@@ -55,6 +57,7 @@ class AddQualificationsSpecScreen extends Component {
         }
         if (this.state.added.map(e => e.value).indexOf(this.state.currentValue) < 0) {
             this.setState({
+                currentValue: '',
                 added: [...this.state.added, item]
             });
         }
@@ -87,15 +90,21 @@ class AddQualificationsSpecScreen extends Component {
 
     onNextPress = (next) => {
         const userInfo = this.props.navigation.getParam('userInfo', {});
-        userInfo.qualifications = next ? this.state.added : null
-        userInfo.type = 'Doctor'
+        userInfo.qualifications = next ? this.state.added.map(e => e.value) : null;
+        const auth = { ...userInfo.auth }
+        userInfo.auth = undefined;
         const doctor = {
             user: userInfo,
             type: 'Doctor'
         }
-        console.log(user);
-        this.props.setUser(user);
-        this.props.navigation.navigate('Doctor');
+        Axios.post(`${config.backend}/doctor/new`, { ...userInfo, auth }).then(e => {
+            if (!e.data.err) {
+                this.props.setUser(doctor);
+                this.props.navigation.navigate('Doctor');
+            } else {
+                console.log(e.data.err);
+            }
+        });
     }
 
     render() {
@@ -260,7 +269,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
     return ({
-        setUser: user => dispatch(setUser(user))
+        setUser: user => dispatch(NewUserActions.setUser(user))
     });
 }
 

@@ -12,12 +12,12 @@ import UsernamePasswordScreen from '../screens/NewUser/UNPassScreen';
 
 export default createAppContainer(createStackNavigator({
     Start: StartScreen,
+    SelectProfilePic: SelectProfilePicScreen,
+    AddQualificationsSpec: AddQualificationsSpecScreen,
     UNPass: UsernamePasswordScreen,
     SelectHospital: SelectHospitalScreen,
     SelectClinic: SelectClinicScreen,
-    AddQualificationsSpec: AddQualificationsSpecScreen,
     BasicInfo: BasicInfoScreen,
-    SelectProfilePic: SelectProfilePicScreen,
 }, {
         headerMode: 'none',
         navigationOptions: {

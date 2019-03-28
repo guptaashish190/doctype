@@ -17,24 +17,29 @@ class SelectProfilePicScreen extends Component {
     }
 
 
-    componentDidMount() {
+    async componentDidMount() {
 
-        Animated.sequence([
-            Animated.timing(this.state.titleOpacity, {
-                delay: 400,
-                toValue: 1,
-                duration: 1000,
-                useNativeDriver: true,
-                easing: Easing.bezier(.16, .83, .23, 1.03)
-            }),
-            Animated.timing(this.state.mainOpacity, {
-                toValue: 1,
-                duration: 700,
-                useNativeDriver: true,
-                easing: Easing.bezier(.16, .83, .23, 1.03)
-            })
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        this.setState({
+            cameraStatus: status
+        }, () => {
+            Animated.sequence([
+                Animated.timing(this.state.titleOpacity, {
+                    delay: 400,
+                    toValue: 1,
+                    duration: 1000,
+                    useNativeDriver: true,
+                    easing: Easing.bezier(.16, .83, .23, 1.03)
+                }),
+                Animated.timing(this.state.mainOpacity, {
+                    toValue: 1,
+                    duration: 700,
+                    useNativeDriver: true,
+                    easing: Easing.bezier(.16, .83, .23, 1.03)
+                })
 
-        ]).start();
+            ]).start();
+        });
 
     }
 
@@ -50,7 +55,7 @@ class SelectProfilePicScreen extends Component {
                         local: this.state.selectedImage
                     } :
                         {
-                            url: null,
+                            url: DEFAULT_IMAGE_URI,
                             local: null
                         }
                 }
@@ -83,14 +88,12 @@ class SelectProfilePicScreen extends Component {
                             aspect: [1, 1],
                             mediaTypes: 'Images'
                         });
-
                         if (!result.cancelled) {
                             this.setState({ selectedImage: result.uri });
                         }
                     } else {
                         // Camera
-                        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-                        if (status === 'granted') {
+                        if (this.state.cameraStatus === 'granted') {
                             let result = await ImagePicker.launchCameraAsync({
                                 allowsEditing: true,
                                 aspect: [1, 1],
@@ -99,7 +102,6 @@ class SelectProfilePicScreen extends Component {
                                 this.setState({ selectedImage: result.uri });
                             }
                         }
-
                     }
                 }
             }

@@ -6,7 +6,7 @@ import shortid from 'shortid';
 
 import { StatusBarHeight } from '../../constants/Layout';
 import Colors from '../../constants/Colors';
-import SearchHeader from '../../components/Patient/Headers/SearchHeader';
+import SearchHeader from '../../components/Patient/SearchHeader';
 import config from '../../config';
 import DoctorSearchCard from '../../components/Patient/DoctorSearchCard';
 

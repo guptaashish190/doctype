@@ -7,7 +7,7 @@ const INITIAL_STATE = {
     appSpec: {
         profilePicture: {
             url: 'http://wwsthemes.com/themes/medwise/v1.4/images/doctor-single.jpg',
-            local: ''
+            local: 'http://wwsthemes.com/themes/medwise/v1.4/images/doctor-single.jpg'
         }
     },
     currentPatients: [],

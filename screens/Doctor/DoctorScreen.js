@@ -10,6 +10,9 @@ import Colors from '../../constants/Colors';
 import BasicCard from '../../components/Doctor/BasicCard';
 
 class DoctorScreen extends Component {
+  componentDidMount() {
+    console.log(this.props);
+  }
   render() {
     return (
       <Container style={styles.container}>
@@ -18,11 +21,13 @@ class DoctorScreen extends Component {
 
           {/* Profile Picture */}
           <View style={styles.profileImageContainer}>
-            <Image style={styles.profileImage} source={{ uri: this.props.appSpec.profilePicture.url }} />
+            <Image style={styles.profileImage} source={{
+              uri: this.props.appSpec.profilePicture.local || 'https://i.stack.imgur.com/l60Hf.png',
+            }} />
           </View>
 
           {/* Basic Info */}
-          <BasicCard cardInfo={this.props.basic} title="Basic" />
+          <BasicCard cardInfo={this.props.basic || []} title="Basic" />
           <MapCard
             title="Clinic"
             name={this.props.clinic.name}
@@ -71,14 +76,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return ({
-    basic: state.TestDoctor.basic,
-    qualifications: state.TestDoctor.qualifications,
-    currentPatients: state.TestDoctor.currentPatients,
-    allPatients: state.TestDoctor.allPatients,
-    clinic: state.TestDoctor.clinic,
-    hospital: state.TestDoctor.hospital,
-    contact: state.TestDoctor.contact,
-    appSpec: state.TestDoctor.appSpec
+    basic: state.UserInfo.user.basic,
+    qualifications: state.UserInfo.user.qualifications,
+    currentPatients: state.UserInfo.user.currentPatients,
+    allPatients: state.UserInfo.user.allPatients,
+    clinic: state.UserInfo.user.clinic,
+    hospital: state.UserInfo.user.hospital,
+    contact: state.UserInfo.user.contact,
+    appSpec: state.UserInfo.user.appSpec
   })
 }
 

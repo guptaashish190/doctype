@@ -37,7 +37,7 @@ class BasicCard extends Component {
         return (
             <Card style={styles.container}>
                 <CardItem header style={styles.header}>
-                    <Text style={{ color: 'black' }}>{this.props.title}</Text>
+                    <Text style={{ color: 'black' }}>{this.props.title || ''}</Text>
                 </CardItem>
                 {this.getMappedDetails()}
             </Card>

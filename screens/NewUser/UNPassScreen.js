@@ -39,9 +39,11 @@ class UsernamePasswordScreen extends Component {
         this.props.navigation.navigate('BasicInfo', {
             userInfo: {
                 ...userInfo,
-                username: this.state.userName,
-                pass: this.state.pass
-            }
+                auth: {
+                    username: this.state.userName,
+                    password: this.state.pass
+                }
+            },
         });
     }
 

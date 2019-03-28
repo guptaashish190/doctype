@@ -1,10 +1,10 @@
 {
   "packagerPort": 19001,
-  "packagerPid": 9896,
-  "devToolsPort": 19003,
+  "packagerPid": 2652,
+  "webpackServerPort": null,
+  "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://mv-isf.anonymous.doctype.exp.direct",
-  "packagerNgrokUrl": "https://packager.mv-isf.anonymous.doctype.exp.direct",
-  "ngrokPid": 14840,
-  "webpackServerPort": null
+  "expoServerNgrokUrl": "https://w4-u3w.anonymous.doctype.exp.direct",
+  "packagerNgrokUrl": "https://packager.w4-u3w.anonymous.doctype.exp.direct",
+  "ngrokPid": 11540
 }

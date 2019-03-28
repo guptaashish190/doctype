@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, TouchableOpacity, Animated, Easing, Keyboard } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Item, Input, Container, Text, Content } from 'native-base';
 import PropTypes from 'prop-types';
-import Colors from '../../../constants/Colors';
+import Colors from '../../constants/Colors';
 
 class SearchHeader extends Component {
 

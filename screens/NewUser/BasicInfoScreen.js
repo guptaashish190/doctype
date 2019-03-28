@@ -66,11 +66,16 @@ class BasicInfoScreen extends Component {
         this.props.navigation.navigate('SelectClinic', {
             userInfo: {
                 ...userInfo,
-                name: this.state.name,
-                phone: this.state.phone,
-                email: this.state.email,
-                dob: this.state.dob,
-                mStatus: this.state.mStatus
+                basic: {
+                    name: this.state.name,
+                    dob: this.state.dob,
+                    mStatus: this.state.mStatus
+                },
+                contact: {
+                    phone: this.state.phone,
+                    email: this.state.email,
+                    address: null
+                }
             }
         });
     }
