@@ -98,7 +98,7 @@ class AddQualificationsSpecScreen extends Component {
             type: 'Doctor'
         }
         Axios.post(`${config.backend}/doctor/new`, { ...userInfo, auth }).then(e => {
-            if (!e.data.err) {
+            if (e.data.success) {
                 this.props.setUser(doctor);
                 this.props.navigation.navigate('Doctor');
             } else {

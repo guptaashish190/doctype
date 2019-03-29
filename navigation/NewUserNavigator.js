@@ -9,15 +9,23 @@ import SelectHospitalScreen from '../screens/NewUser/SelectHospitalScreen';
 import SelectProfilePicScreen from '../screens/NewUser/SelectProfilePicScreen';
 import AddQualificationsSpecScreen from '../screens/NewUser/AddQualificationsSpecScreen';
 import UsernamePasswordScreen from '../screens/NewUser/UNPassScreen';
+import PatientBasicInfoScreen from '../screens/NewUser/Patient/PatientBasicInfoScreen';
+import PatientSelectProfilePicScreen from '../screens/NewUser/Patient/PatientSelectProfilePicScreen';
+import PatientSelectHomeScreen from '../screens/NewUser/Patient/PatientSelectHomeScreen';
+import PatientBodyScreen from '../screens/NewUser/Patient/PatientBodyScreen';
 
 export default createAppContainer(createStackNavigator({
-    SelectHospital: SelectHospitalScreen,
     Start: StartScreen,
+    PatientBody: PatientBodyScreen,
+    PatientBasicInfo: PatientBasicInfoScreen,
+    SelectHospital: SelectHospitalScreen,
     SelectProfilePic: SelectProfilePicScreen,
     AddQualificationsSpec: AddQualificationsSpecScreen,
     UNPass: UsernamePasswordScreen,
     SelectClinic: SelectClinicScreen,
     BasicInfo: BasicInfoScreen,
+    PatientSelectProfilePric: PatientSelectProfilePicScreen,
+    PatientSelectHome: PatientSelectHomeScreen,
 }, {
         headerMode: 'none',
         navigationOptions: {
