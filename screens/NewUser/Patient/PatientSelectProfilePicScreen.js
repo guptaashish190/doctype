@@ -65,7 +65,6 @@ class PatientSelectProfilePicScreen extends Component {
             user: userInfo,
             type: 'Patient'
         }
-        console.log(auth)
         Axios.post(`${config.backend}/patient/new`, { ...userInfo, auth }).then(e => {
             if (e.data.success) {
                 this.props.setUser(patient);

@@ -15,7 +15,7 @@ class PatientBasicInfoScreen extends Component {
         name: '',
         phone: '',
         email: '',
-        dob: '',
+        dob: new Date(),
         mStatus: 'Unmarried',
         titleOpacity: new Animated.Value(0),
         mainOpacity: new Animated.Value(0),
@@ -69,7 +69,7 @@ class PatientBasicInfoScreen extends Component {
                 basic: {
                     name: this.state.name,
                     dob: this.state.dob,
-                    mStatus: this.state.mStatus
+                    maritalStatus: this.state.mStatus
                 },
                 contact: {
                     phone: this.state.phone,

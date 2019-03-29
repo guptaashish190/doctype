@@ -3,27 +3,49 @@ import { StyleSheet, NativeModules, View, Platform, TouchableOpacity } from 'rea
 import { Container, Content, Text, Item, Label, Input, Icon, Button } from 'native-base';
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
-import { ActionButton } from 'react-native-material-ui';
-import { white } from 'ansi-colors';
-
-// Get statusbar height
-const { StatusBarManager } = NativeModules;
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBarManager.HEIGHT;
+import config from '../../config';
+import Axios from 'axios';
 
 class Login extends Component {
 
   state = {
     usernameText: '',
     passwordText: '',
-    type: 'P'
+    type: 'P',
+    error: false,
   }
 
   onLoginClick = () => {
-    if (this.state.type === 'P') {
-      this.props.navigation.navigate('Patient');
+    // if (this.state.type === 'P') {
+    //   this.props.navigation.navigate('Patient');
+    // } else {
+    //   this.props.navigation.navigate('Doctor');
+    // }
+
+    if (this.state.usernameText && this.state.passwordText) {
+
+      if (this.state.type === 'P') {
+        const data = {
+          params: {
+            username: this.state.usernameText,
+            password: this.state.passwordText
+          }
+        }
+        Axios.get(`${config.backend}/patient/verify`, data).then(({ data }) => {
+          if (data.valid) {
+          } else {
+            this.setState({
+              error: 'invalid user'
+            });
+          }
+        });
+      }
     } else {
-      this.props.navigation.navigate('Doctor');
+      this.setState({
+        error: true
+      });
     }
+
   }
 
   onNewUserClick = () => {
@@ -38,21 +60,25 @@ class Login extends Component {
             DOCTYPE
           </Text>
           <View style={styles.box}>
-            <Item style={styles.textBox} floatingLabel>
+            <Item floatingLabel style={this.state.error ? [styles.textBox, { borderColor: 'red' }] : styles.textBox} >
               <Icon name="person" style={{ color: Colors.primary }} />
               <Label style={{ padding: 10 }} >Username</Label>
               <Input
                 style={{ padding: 10 }}
-                onChangeText={text => this.setState({ usernameText: text })}
+                onChangeText={text => this.setState({ usernameText: text, error: false })}
                 value={this.state.usernameText} />
+              {this.state.error ? <Icon name="close-circle" style={{ color: 'red' }} /> : <Text></Text>}
             </Item>
-            <Item style={styles.textBox} floatingLabel>
+            <Item style={[styles.textBox, this.state.error ? { borderColor: 'red' } : null]} floatingLabel>
               <Icon name="lock" style={{ color: Colors.primary }} />
               <Label style={{ padding: 10 }}>Password</Label>
               <Input
                 style={{ padding: 10 }}
-                onChangeText={text => this.setState({ passwordText: text })}
-                value={this.state.passwordText} />
+                secureTextEntry
+                onChangeText={text => this.setState({ passwordText: text, error: false })}
+                value={this.state.passwordText}
+              />
+              {this.state.error ? <Icon name="close-circle" style={{ color: 'red' }} /> : <Text></Text>}
             </Item>
             <View style={styles.typeOptions}>
               <TouchableOpacity onPress={() => this.setState({ type: 'P' })} style={[styles.typeTextContainer, this.state.type === 'P' ? { borderBottomColor: Colors.secondary } : { borderBottomColor: Colors.lightBlue }]} >
@@ -64,7 +90,6 @@ class Login extends Component {
             </View>
             <View>
               <Button onPress={() => this.onLoginClick()} style={styles.loginButton}><Text style={styles.loginText}>Login</Text></Button>
-
             </View>
           </View>
           <Button style={styles.newButton} onPress={() => this.onNewUserClick()}><Text style={styles.newText}>New User</Text></Button>
