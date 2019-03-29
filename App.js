@@ -25,7 +25,9 @@ export default class App extends React.Component {
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <Provider store={store}>
-            <AppNavigator />
+            <Root>
+              <AppNavigator />
+            </Root>
           </Provider>
         </View>
       );

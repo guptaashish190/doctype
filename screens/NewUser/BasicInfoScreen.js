@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, NativeModules, View, Platform, TouchableOpacity, Animated, Easing } from 'react-native';
-import { Container, Content, Text, Item, Input, DatePicker, ActionSheet, Root, Icon } from 'native-base';
+import { Container, Content, Text, Item, Input, DatePicker, ActionSheet, Icon } from 'native-base';
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 import { StatusBarHeight } from '../../constants/Layout';
@@ -95,73 +95,73 @@ class BasicInfoScreen extends Component {
         }
 
         return (
-            <Root>
-                <Container style={styles.container}>
-                    <Content style={{ width: '100%' }} contentContainerStyle={styles.content}>
-                        <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
-                            {`Fill out\nyour basic info`}
-                        </Animated.Text>
-                        <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
-                            <View style={styles.inputContainer}>
-                                <Item style={[styles.input, styles.item]} rounded>
-                                    <Icon name="person" style={styles.icon} />
-                                    <Input
-                                        placeholder="Name"
-                                        value={this.state.name}
-                                        onChangeText={text => this.setState({ name: text })}
-                                    />
-                                </Item>
-                                <Item rounded style={[styles.datePicker, styles.item]}>
-                                    <Icon name="calendar" style={styles.icon} />
-                                    <DatePicker
-                                        defaultDate={new Date(2018, 4, 4)}
-                                        minimumDate={new Date(2018, 1, 1)}
-                                        maximumDate={new Date(2018, 12, 31)}
-                                        locale={"en"}
-                                        timeZoneOffsetInMinutes={undefined}
-                                        modalTransparent={false}
-                                        animationType={"fade"}
-                                        androidMode={"default"}
-                                        placeHolderText="Date of birth"
-                                        textStyle={{ color: "#444" }}
-                                        placeHolderTextStyle={{ color: "#666" }}
-                                        onDateChange={(date) => this.setDate(date)}
-                                        disabled={false}
-                                    />
-                                </Item>
-                                <Item style={[styles.datePicker, styles.item]} rounded>
-                                    <Icon name="people" style={styles.icon} />
-                                    <TouchableOpacity onPress={() => this.onMStatus()}>
-                                        <Text style={{ padding: 8, color: '#666' }}>
-                                            {this.state.mStatus}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </Item>
-                                <Item style={[styles.input, styles.item]} rounded>
-                                    <Icon name="call" style={styles.icon} />
-                                    <Input
-                                        value={this.state.phone}
-                                        onChangeText={text => this.setState({ phone: text })}
-                                        keyboardType="numeric"
-                                        placeholder="Phone Number" />
-                                </Item>
 
-                                <Item style={[styles.input, styles.item]} rounded>
-                                    <Icon name="mail" style={styles.icon} />
-                                    <Input
-                                        placeholder="Email"
-                                        value={this.state.email}
-                                        onChangeText={text => this.setState({ email: text })}
-                                    />
-                                </Item>
-                            </View>
-                            <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
-                                <Icon name="md-arrow-round-forward" style={styles.nextButton} />
-                            </TouchableOpacity>
-                        </Animated.View>
-                    </Content>
-                </Container >
-            </Root>
+            <Container style={styles.container}>
+                <Content style={{ width: '100%' }} contentContainerStyle={styles.content}>
+                    <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
+                        {`Fill out\nyour basic info`}
+                    </Animated.Text>
+                    <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
+                        <View style={styles.inputContainer}>
+                            <Item style={[styles.input, styles.item]} rounded>
+                                <Icon name="person" style={styles.icon} />
+                                <Input
+                                    placeholder="Name"
+                                    value={this.state.name}
+                                    onChangeText={text => this.setState({ name: text })}
+                                />
+                            </Item>
+                            <Item rounded style={[styles.datePicker, styles.item]}>
+                                <Icon name="calendar" style={styles.icon} />
+                                <DatePicker
+                                    defaultDate={new Date(2018, 4, 4)}
+                                    minimumDate={new Date(2018, 1, 1)}
+                                    maximumDate={new Date(2018, 12, 31)}
+                                    locale={"en"}
+                                    timeZoneOffsetInMinutes={undefined}
+                                    modalTransparent={false}
+                                    animationType={"fade"}
+                                    androidMode={"default"}
+                                    placeHolderText="Date of birth"
+                                    textStyle={{ color: "#444" }}
+                                    placeHolderTextStyle={{ color: "#666" }}
+                                    onDateChange={(date) => this.setDate(date)}
+                                    disabled={false}
+                                />
+                            </Item>
+                            <Item style={[styles.datePicker, styles.item]} rounded>
+                                <Icon name="people" style={styles.icon} />
+                                <TouchableOpacity onPress={() => this.onMStatus()}>
+                                    <Text style={{ padding: 8, color: '#666' }}>
+                                        {this.state.mStatus}
+                                    </Text>
+                                </TouchableOpacity>
+                            </Item>
+                            <Item style={[styles.input, styles.item]} rounded>
+                                <Icon name="call" style={styles.icon} />
+                                <Input
+                                    value={this.state.phone}
+                                    onChangeText={text => this.setState({ phone: text })}
+                                    keyboardType="numeric"
+                                    placeholder="Phone Number" />
+                            </Item>
+
+                            <Item style={[styles.input, styles.item]} rounded>
+                                <Icon name="mail" style={styles.icon} />
+                                <Input
+                                    placeholder="Email"
+                                    value={this.state.email}
+                                    onChangeText={text => this.setState({ email: text })}
+                                />
+                            </Item>
+                        </View>
+                        <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                            <Icon name="md-arrow-round-forward" style={styles.nextButton} />
+                        </TouchableOpacity>
+                    </Animated.View>
+                </Content>
+            </Container >
+
         );
     }
 }

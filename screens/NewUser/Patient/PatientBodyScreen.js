@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, NativeModules, View, Slider, Picker, TouchableOpacity, Animated, Easing } from 'react-native';
-import { Container, Content, Text, Item, Input, DatePicker, ActionSheet, Root, Icon } from 'native-base';
+import { Container, Content, Text, Item, Input, DatePicker, ActionSheet, Icon } from 'native-base';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import { StatusBarHeight } from '../../../constants/Layout';
@@ -61,56 +61,54 @@ class PatientBodyScreen extends Component {
         }
 
         return (
-            <Root>
-                <Container style={styles.container}>
-                    <Content style={{ width: '100%' }} contentContainerStyle={styles.content}>
-                        <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
-                            {`Some more!`}
-                        </Animated.Text>
-                        <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
-                            <View style={styles.inputContainer}>
-                                <View style={styles.item}>
-                                    <View style={styles.titleSection}>
-                                        <Text style={styles.itemTitle}>Height</Text>
-                                        <Text style={styles.itemValue}>{this.state.height}</Text>
-                                    </View>
-                                    <Slider
-                                        maximumValue={200}
-                                        anima
-                                        minimumValue={10}
-                                        thumbTintColor={Colors.purple}
-                                        step={1}
-                                        style={{ marginTop: 10 }}
-                                        value={this.state.height}
-                                        onValueChange={height => this.setState({ height })}
-                                        minimumTrackTintColor={Colors.purple}
-                                    />
+            <Container style={styles.container}>
+                <Content style={{ width: '100%' }} contentContainerStyle={styles.content}>
+                    <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
+                        {`Some more!`}
+                    </Animated.Text>
+                    <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
+                        <View style={styles.inputContainer}>
+                            <View style={styles.item}>
+                                <View style={styles.titleSection}>
+                                    <Text style={styles.itemTitle}>Height</Text>
+                                    <Text style={styles.itemValue}>{this.state.height} cm</Text>
                                 </View>
-                                <View style={styles.item}>
-                                    <View style={styles.titleSection}>
-                                        <Text style={styles.itemTitle}>Weight</Text>
-                                        <Text style={styles.itemValue}>{this.state.weight}</Text>
-                                    </View>
-                                    <Slider
-                                        maximumValue={200}
-                                        anima
-                                        minimumValue={10}
-                                        thumbTintColor={Colors.purple}
-                                        step={1}
-                                        style={{ marginTop: 10 }}
-                                        value={this.state.weight}
-                                        onValueChange={weight => this.setState({ weight })}
-                                        minimumTrackTintColor={Colors.purple}
-                                    />
-                                </View>
+                                <Slider
+                                    maximumValue={200}
+                                    anima
+                                    minimumValue={10}
+                                    thumbTintColor={Colors.purple}
+                                    step={1}
+                                    style={{ marginTop: 10 }}
+                                    value={this.state.height}
+                                    onValueChange={height => this.setState({ height })}
+                                    minimumTrackTintColor={Colors.purple}
+                                />
                             </View>
-                            <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
-                                <Icon name="md-arrow-round-forward" style={styles.nextButton} />
-                            </TouchableOpacity>
-                        </Animated.View>
-                    </Content>
-                </Container >
-            </Root>
+                            <View style={styles.item}>
+                                <View style={styles.titleSection}>
+                                    <Text style={styles.itemTitle}>Weight</Text>
+                                    <Text style={styles.itemValue}>{this.state.weight} Kg</Text>
+                                </View>
+                                <Slider
+                                    maximumValue={200}
+                                    anima
+                                    minimumValue={10}
+                                    thumbTintColor={Colors.purple}
+                                    step={1}
+                                    style={{ marginTop: 10 }}
+                                    value={this.state.weight}
+                                    onValueChange={weight => this.setState({ weight })}
+                                    minimumTrackTintColor={Colors.purple}
+                                />
+                            </View>
+                        </View>
+                        <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                            <Icon name="md-arrow-round-forward" style={styles.nextButton} />
+                        </TouchableOpacity>
+                    </Animated.View>
+                </Content>
+            </Container >
         );
     }
 }

@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { StyleSheet, NativeModules, View, Platform, TouchableOpacity } from 'react-native';
-import { Container, Content, Text, Item, Label, Input, Icon, Button } from 'native-base';
+import { Container, Content, Text, Item, Label, Input, Icon, Button, Toast } from 'native-base';
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 import config from '../../config';
 import Axios from 'axios';
+import { connect } from 'react-redux';
+import NewUserActions from '../../Actions/NewUserActions';
 
 class Login extends Component {
 
   state = {
-    usernameText: '',
-    passwordText: '',
+    username: '',
+    password: '',
     type: 'P',
     error: false,
   }
@@ -22,30 +24,79 @@ class Login extends Component {
     //   this.props.navigation.navigate('Doctor');
     // }
 
-    if (this.state.usernameText && this.state.passwordText) {
-
+    const data = {
+      params: {
+        username: this.state.username,
+        password: this.state.password
+      }
+    }
+    if (!this.state.username.length || !this.state.password.length) {
+      this.setState({
+        error: 'Fill all the fields'
+      }, () => {
+        Toast.show({
+          text: "Fill all the fields",
+          type: 'danger',
+          duration: 3000,
+        });
+      });
+    } else {
       if (this.state.type === 'P') {
-        const data = {
-          params: {
-            username: this.state.usernameText,
-            password: this.state.passwordText
-          }
-        }
         Axios.get(`${config.backend}/patient/verify`, data).then(({ data }) => {
           if (data.valid) {
+            const doctor = {
+              user: data.data,
+              type: 'Patient'
+            }
+            this.props.setUser(doctor);
+            this.props.navigation.navigate('Patient');
           } else {
             this.setState({
-              error: 'invalid user'
+              error: 'username,password'
+            }, () => {
+              Toast.show({
+                text: "No user found",
+                type: 'danger',
+                duration: 3000,
+              });
+            });
+          }
+        });
+      } else {
+        Axios.get(`${config.backend}/doctor/verify`, data).then(({ data }) => {
+          if (data.valid) {
+            console.log(data);
+            const doctor = {
+              user: data.data,
+              type: 'Doctor'
+            }
+            this.props.setUser(doctor);
+            this.props.navigation.navigate('Doctor');
+          } else {
+            this.setState({
+              error: 'username,password'
+            }, () => {
+              Toast.show({
+                text: "No user found",
+                type: 'danger',
+                duration: 3000,
+              });
             });
           }
         });
       }
-    } else {
-      this.setState({
-        error: true
-      });
-    }
 
+    }
+  }
+
+  isError = type => {
+    if (this.state.error && this.state.error.includes(type)) {
+      return true;
+    }
+    if (this.state.error && !this.state[type].length) {
+      return true;
+    }
+    return false;
   }
 
   onNewUserClick = () => {
@@ -60,25 +111,25 @@ class Login extends Component {
             DOCTYPE
           </Text>
           <View style={styles.box}>
-            <Item floatingLabel style={this.state.error ? [styles.textBox, { borderColor: 'red' }] : styles.textBox} >
+            <Item style={styles.textBox} error={this.isError('username')} rounded>
               <Icon name="person" style={{ color: Colors.primary }} />
-              <Label style={{ padding: 10 }} >Username</Label>
               <Input
                 style={{ padding: 10 }}
-                onChangeText={text => this.setState({ usernameText: text, error: false })}
-                value={this.state.usernameText} />
-              {this.state.error ? <Icon name="close-circle" style={{ color: 'red' }} /> : <Text></Text>}
+                placeholder="Username"
+                onChangeText={text => this.setState({ username: text, error: false })}
+                value={this.state.username} />
+              {this.isError('username') ? <Icon name="close-circle" style={{ color: 'red' }} /> : null}
             </Item>
-            <Item style={[styles.textBox, this.state.error ? { borderColor: 'red' } : null]} floatingLabel>
+            <Item style={styles.textBox} error={this.isError('password')} rounded>
               <Icon name="lock" style={{ color: Colors.primary }} />
-              <Label style={{ padding: 10 }}>Password</Label>
               <Input
                 style={{ padding: 10 }}
                 secureTextEntry
-                onChangeText={text => this.setState({ passwordText: text, error: false })}
-                value={this.state.passwordText}
+                placeholder="Password"
+                onChangeText={text => this.setState({ password: text, error: false })}
+                value={this.state.password}
               />
-              {this.state.error ? <Icon name="close-circle" style={{ color: 'red' }} /> : <Text></Text>}
+              {this.isError('password') ? <Icon name="close-circle" style={{ color: 'red' }} /> : null}
             </Item>
             <View style={styles.typeOptions}>
               <TouchableOpacity onPress={() => this.setState({ type: 'P' })} style={[styles.typeTextContainer, this.state.type === 'P' ? { borderBottomColor: Colors.secondary } : { borderBottomColor: Colors.lightBlue }]} >
@@ -127,6 +178,8 @@ const styles = StyleSheet.create({
     width: '90%',
     alignItems: 'center',
     marginTop: 20,
+    padding: 5,
+    margin: 10
   },
   loginButton: {
     marginTop: 70,
@@ -158,7 +211,6 @@ const styles = StyleSheet.create({
   },
   typeText: {
     fontSize: 25,
-
   },
   newButton: {
     position: 'absolute',
@@ -174,4 +226,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+  return ({
+    setUser: user => dispatch(NewUserActions.setUser(user)),
+  })
+}
+
+export default connect(null, mapDispatchToProps)(Login);

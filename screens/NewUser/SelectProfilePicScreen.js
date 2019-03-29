@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, View, TouchableOpacity, TouchableNativeFeedback, Animated, Easing } from 'react-native';
-import { Container, Content, Text, Icon, ActionSheet, Root } from 'native-base';
+import { Container, Content, Text, Icon, ActionSheet } from 'native-base';
 import { ImagePicker, Permissions } from 'expo';
 import { StatusBarHeight } from '../../constants/Layout'
 import Colors from '../../constants/Colors';
@@ -123,26 +123,26 @@ class SelectProfilePicScreen extends Component {
         }
 
         return (
-            <Root>
-                <Container style={styles.container}>
-                    <Content contentContainerStyle={styles.content}>
-                        <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
-                            {`Choose a\nProfile Picture`}
-                        </Animated.Text>
-                        <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
-                            <TouchableNativeFeedback onPress={() => this.onChooseImage()}>
-                                <Image style={styles.mainImage} source={{ uri: this.state.selectedImage || DEFAULT_IMAGE_URI }} />
-                            </TouchableNativeFeedback>
-                            <TouchableOpacity onPress={() => this.onNextPress(true)} style={styles.nextButtonContainer} activeOpacity={0.8}>
-                                <Icon name="md-arrow-round-forward" style={styles.nextButton} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.onNextPress(false)} style={styles.skipContainer}>
-                                <Text style={styles.skipText}>Skip</Text>
-                            </TouchableOpacity>
-                        </Animated.View>
-                    </Content>
-                </Container>
-            </Root>
+
+            <Container style={styles.container}>
+                <Content contentContainerStyle={styles.content}>
+                    <Animated.Text style={[styles.title, TitleAnimatedStyle]}>
+                        {`Choose a\nProfile Picture`}
+                    </Animated.Text>
+                    <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
+                        <TouchableNativeFeedback onPress={() => this.onChooseImage()}>
+                            <Image style={styles.mainImage} source={{ uri: this.state.selectedImage || DEFAULT_IMAGE_URI }} />
+                        </TouchableNativeFeedback>
+                        <TouchableOpacity onPress={() => this.onNextPress(true)} style={styles.nextButtonContainer} activeOpacity={0.8}>
+                            <Icon name="md-arrow-round-forward" style={styles.nextButton} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.onNextPress(false)} style={styles.skipContainer}>
+                            <Text style={styles.skipText}>Skip</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                </Content>
+            </Container>
+
         );
     }
 }
