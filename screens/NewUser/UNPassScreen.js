@@ -40,7 +40,7 @@ class UsernamePasswordScreen extends Component {
     sendRequestAndPush = (userInfo, query) => {
         Axios.get(`${config.backend}/validate/username`, query).then(({ data }) => {
             console.log(data.status);
-            if(data.status === 'Username taken'){
+            if (data.status === 'Username taken') {
                 this.setState({
                     error: 'username'
                 }, () => {
@@ -48,10 +48,10 @@ class UsernamePasswordScreen extends Component {
                         text: "Username is already taken",
                         type: 'danger',
                         duration: 3000,
-                      })
+                    })
                 });
-                
-            }else{
+
+            } else {
                 if (userInfo.type === 'Doctor') {
                     this.props.navigation.navigate('BasicInfo', {
                         userInfo: {
@@ -82,41 +82,41 @@ class UsernamePasswordScreen extends Component {
         const query = {
             params: {
                 username: this.state.username,
-                type:userInfo.type
+                type: userInfo.type
             }
         }
-        if(this.state.username.length && this.state.pass.length && this.state.rePass.length){
-            if(this.state.pass !== this.state.rePass){
-            this.setState({
-                error: 'pass,rePass'
-            }, () => {
-            Toast.show({
-                text: "Passwords do not match",
-                type: 'danger',
-                duration: 3000,
-              })
-            });
-            }else{
-                    // Send the request after full validation ---------------
+        if (this.state.username.length && this.state.pass.length && this.state.rePass.length) {
+            if (this.state.pass !== this.state.rePass) {
+                this.setState({
+                    error: 'pass,rePass'
+                }, () => {
+                    Toast.show({
+                        text: "Passwords do not match",
+                        type: 'danger',
+                        duration: 3000,
+                    })
+                });
+            } else {
+                // Send the request after full validation ---------------
                 this.sendRequestAndPush(userInfo, query);
             }
-        }else{
+        } else {
             this.setState({
                 error: 'Fill all the fields'
             }, () => {
-            Toast.show({
-                text: "Fill all the fields",
-                type: 'danger',
-                duration: 3000,
-              })
+                Toast.show({
+                    text: "Fill all the fields",
+                    type: 'danger',
+                    duration: 3000,
+                })
             });
         }
     }
     isError = type => {
-        if(this.state.error && this.state.error.includes(type)){
+        if (this.state.error && this.state.error.includes(type)) {
             return true;
         }
-        if(this.state.error && !this.state[type].length){
+        if (this.state.error && !this.state[type].length) {
             return true;
         }
         return false;
@@ -150,7 +150,7 @@ class UsernamePasswordScreen extends Component {
                                 <Input
                                     placeholder="Username"
                                     value={this.state.username}
-                                    onChangeText={text => this.setState({ username: text, error: false })}
+                                    onChangeText={text => this.setState({ username: text, error: this.state.error ? this.state.error.replace('username', '') : false })}
                                 />
                                 {this.isError('username') ? <Icon name="close-circle" /> : null}
                             </Item>
@@ -160,7 +160,7 @@ class UsernamePasswordScreen extends Component {
                                     secureTextEntry
                                     placeholder="Password"
                                     value={this.state.pass}
-                                    onChangeText={text => this.setState({ pass: text, error: false })}
+                                    onChangeText={text => this.setState({ pass: text, error: this.state.error ? this.state.error.replace('pass', '') : false })}
                                 />
                                 {this.isError('pass') ? <Icon name="close-circle" /> : null}
 
@@ -171,7 +171,7 @@ class UsernamePasswordScreen extends Component {
                                     secureTextEntry
                                     placeholder="Retype Password"
                                     value={this.state.rePass}
-                                    onChangeText={text => this.setState({ rePass: text, error: false })}
+                                    onChangeText={text => this.setState({ rePass: text, error: this.state.error ? this.state.error.replace('rePass', '') : false })}
                                 />
                                 {this.isError('rePass') ? <Icon name="close-circle" /> : null}
 
