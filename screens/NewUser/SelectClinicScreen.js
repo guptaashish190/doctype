@@ -105,19 +105,27 @@ class SelectClinicScreen extends Component {
     onNextPress = (next) => {
         const userInfo = this.props.navigation.getParam('userInfo', {});
 
-        if (this.validate()) {
+        if (next) {
+            if (this.validate()) {
+                this.props.navigation.navigate('SelectHospital', {
+                    userInfo: {
+                        ...userInfo,
+                        clinic: {
+                            name: this.state.selectedPlaceTitle,
+                            location: [this.state.userLongitude, this.state.userLatitude]
+                        }
+                    }
+                });
+            }
+        } else {
             this.props.navigation.navigate('SelectHospital', {
                 userInfo: {
                     ...userInfo,
-                    clinic: next ? {
-                        name: this.state.selectedPlaceTitle,
-                        location: [this.state.userLongitude, this.state.userLatitude]
-                    }
-                        :
-                        null
+                    clinic: null
                 }
             });
         }
+
 
     }
 
@@ -220,7 +228,7 @@ class SelectClinicScreen extends Component {
                         <TouchableOpacity onPress={() => this.onNextPress(true)} style={styles.nextButtonContainer} activeOpacity={0.8}>
                             <Icon name="md-arrow-round-forward" style={styles.nextButton} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPres={() => this.onNextPress(false)} style={styles.skipContainer}>
+                        <TouchableOpacity onPress={() => this.onNextPress(false)} style={styles.skipContainer}>
                             <Text style={styles.skipText}>Skip</Text>
                         </TouchableOpacity>
                     </Animated.View>

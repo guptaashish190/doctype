@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, NativeModules, Platform, View, TouchableOpacity, Animated, Easing } from 'react-native';
 import { MapView } from 'expo';
-import { Container, Content, Text, Input, Item, Icon } from 'native-base';
+import { Container, Content, Text, Input, Item, Icon, Toast } from 'native-base';
 import shortid from 'shortid';
 import { StatusBarHeight } from '../../constants/Layout'
 import Colors from '../../constants/Colors';
@@ -104,18 +104,45 @@ class SelectHospitalScreen extends Component {
     onNextPress = (next) => {
         const userInfo = this.props.navigation.getParam('userInfo', {});
 
-        this.props.navigation.navigate('SelectProfilePic', {
-            userInfo: {
-                ...userInfo,
-                hospital: next ? {
-                    name: this.state.selectedPlaceTitle,
-                    location: [this.state.userLongitude, this.state.userLatitude]
-                }
-                    :
-                    null
+        if (next) {
+            if (this.validate()) {
+                this.props.navigation.navigate('SelectProfilePic', {
+                    userInfo: {
+                        ...userInfo,
+                        hospital: {
+                            name: this.state.selectedPlaceTitle,
+                            location: [this.state.userLongitude, this.state.userLatitude]
+                        }
+                    }
+                });
             }
-        });
+        } else {
+            this.props.navigation.navigate('SelectHospital', {
+                userInfo: {
+                    ...userInfo,
+                    hospital: null
+                }
+            });
+        }
     }
+
+
+    validate = () => {
+        if (!this.state.searchValue.length) {
+            this.setState({
+                error: 'hospital'
+            });
+            Toast.show({
+                text: "Give a name to the selected place",
+                type: 'danger',
+                duration: 3000,
+            })
+            return false;
+        }
+        return true;
+    }
+
+    isError = () => this.state.error && this.state.error.includes('clinic');
 
 
     render() {
@@ -154,16 +181,16 @@ class SelectHospitalScreen extends Component {
                                 )} />
                         </View>
                     </View> */}
-
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
 
-                        <Item rounded>
+                        <Item rounded error={this.isError()}>
                             <Icon name="navigate" style={{ color: '#605eff' }} />
                             <Input
-                                onChangeText={t => this.setState({ selectedPlaceTitle: t })}
+                                onChangeText={t => this.setState({ selectedPlaceTitle: t, error: false })}
                                 placeholder="Place Name"
                                 value={this.state.selectedPlaceTitle}
                             />
+                            {this.isError() ? <Icon name="close-circle" /> : null}
                         </Item>
                         {this.state.userLatitude ?
                             (

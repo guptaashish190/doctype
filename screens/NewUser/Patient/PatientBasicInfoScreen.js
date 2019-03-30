@@ -58,7 +58,8 @@ class PatientBasicInfoScreen extends Component {
 
     setDate = (date) => {
         this.setState({
-            dob: date
+            dob: date,
+            error: this.state.error ? this.state.error.replace('dob', '') : false
         });
     }
     onNextPress = () => {
@@ -76,7 +77,7 @@ class PatientBasicInfoScreen extends Component {
                 address: null
             }
         });
-        if (this.validateForm()) {
+        if (this.validateLengthForm() && this.validateFormatForm()) {
             this.props.navigation.navigate('PatientBody', {
                 userInfo: {
                     ...userInfo,
@@ -96,22 +97,19 @@ class PatientBasicInfoScreen extends Component {
     }
 
 
-    validateForm = () => {
+    validateLengthForm = () => {
         let errorString = '';
         if (!this.state.name.length) {
             errorString = errorString + 'name,';
         }
-        if (!this.state.phone || this.state.phone.length > 10) {
+        if (!this.state.phone.length) {
             errorString = errorString + 'phone,';
         }
         if (!this.state.email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(this.state.email)) {
-                errorString = errorString + 'email,';
-            };
+            errorString = errorString + 'email,';
         }
         if (!this.state.dob) {
-            errorString = errorString + 'dob,';
+            errorString = errorString + 'dob';
         }
         this.setState({
             error: errorString.length ? errorString : false
@@ -123,6 +121,32 @@ class PatientBasicInfoScreen extends Component {
                 duration: 3000,
             })
         }
+        return !errorString.length;
+    }
+
+
+    validateFormatForm = () => {
+        let errorString = '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(this.state.email)) {
+            errorString = errorString + 'email,';
+            Toast.show({
+                text: "Fill in valid email address",
+                type: 'danger',
+                duration: 3000,
+            })
+        };
+        if (this.state.phone.length !== 10) {
+            errorString = errorString + 'phone';
+            Toast.show({
+                text: "Fill in valid phone number",
+                type: 'danger',
+                duration: 3000,
+            })
+        }
+        this.setState({
+            error: errorString.length ? errorString : false
+        });
         return !errorString.length;
     }
 

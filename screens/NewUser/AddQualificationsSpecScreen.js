@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity, ScrollView, Animated, Easing } from 'react-native';
-import { Container, Content, Text, Input, Item, Card, CardItem, Icon, List, ListItem, Title } from 'native-base';
+import { Container, Content, Text, Input, Item, Card, CardItem, Icon, List, ListItem, Toast } from 'native-base';
 import shortid from 'shortid';
 import Axios from 'axios';
 import config from '../../config';
@@ -60,6 +60,12 @@ class AddQualificationsSpecScreen extends Component {
                 currentValue: '',
                 added: [...this.state.added, item]
             });
+        } else {
+            Toast.show({
+                text: "Already added!",
+                type: 'danger',
+                duration: 3000,
+            })
         }
     }
 
@@ -77,35 +83,76 @@ class AddQualificationsSpecScreen extends Component {
 
     getListSuggestions = () => {
         const s = suggestions.filter(s => s.toLowerCase().includes(this.state.currentValue.toLowerCase())).slice(0, 5);
-        if (s.length) {
-            return s.map(elem => (
-                <ListItem onPress={() => this.onSuggestionClick(elem)} tyle={styles.suggestion} key={shortid.generate()}>
-                    <Text style={{ color: '#aaa', fontStyle: 'italic' }}>{elem}</Text>
-                </ListItem>
-            ));
-        }
-        return null;
 
+        if (this.state.showSuggestions && !s.length) {
+            this.setState({
+                showSuggestions: false
+            });
+        }
+        return s.map((elem, index) => (
+            <ListItem onPress={() => this.onSuggestionClick(elem)} style={[styles.suggestion, index === s.length - 1 ? { borderBottomWidth: 0 } : null]} key={shortid.generate()}>
+                <Text style={{ color: '#aaa', fontStyle: 'italic' }}>{elem}</Text>
+            </ListItem>
+        ));
     }
 
     onNextPress = (next) => {
         const userInfo = this.props.navigation.getParam('userInfo', {});
-        userInfo.qualifications = next ? this.state.added.map(e => e.value) : null;
-        const auth = { ...userInfo.auth }
-        userInfo.auth = undefined;
-        const doctor = {
-            user: userInfo,
-            type: 'Doctor'
-        }
-        Axios.post(`${config.backend}/doctor/new`, { ...userInfo, auth }).then(e => {
-            if (e.data.success) {
-                this.props.setUser(doctor);
-                this.props.navigation.navigate('Doctor');
-            } else {
-                console.log(e.data.err);
+        if (next) {
+            if (this.validate()) {
+                userInfo.qualifications = this.state.added.map(e => e.value);
+                const auth = { ...userInfo.auth }
+                userInfo.auth = undefined;
+                const doctor = {
+                    user: userInfo,
+                    type: 'Doctor'
+                }
+                Axios.post(`${config.backend}/doctor/new`, { ...userInfo, auth }).then(e => {
+                    if (e.data.success) {
+                        this.props.setUser(doctor);
+                        this.props.navigation.navigate('Doctor');
+                    } else {
+                        console.log(e.data.err);
+                    }
+                });
             }
-        });
+        } else {
+            userInfo.qualifications = [];
+            const auth = { ...userInfo.auth }
+            userInfo.auth = undefined;
+            const doctor = {
+                user: userInfo,
+                type: 'Doctor'
+            }
+            Axios.post(`${config.backend}/doctor/new`, { ...userInfo, auth }).then(e => {
+                if (e.data.success) {
+                    this.props.setUser(doctor);
+                    this.props.navigation.navigate('Doctor');
+                } else {
+                    console.log(e.data);
+                }
+            });
+        }
     }
+
+
+    validate = () => {
+        if (!this.state.added.length) {
+            this.setState({
+                error: 'qual'
+            });
+            Toast.show({
+                text: "Please add a qualification",
+                type: 'danger',
+                duration: 3000,
+            })
+            return false;
+        }
+        return true;
+    }
+
+    isError = () => this.state.error && this.state.error === 'qual';
+
 
     render() {
 
@@ -131,17 +178,17 @@ class AddQualificationsSpecScreen extends Component {
 
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
                         <View style={{ flex: 0.2 }}>
-                            <Item style={styles.input} rounded>
+                            <Item style={styles.input} rounded error={this.isError()}>
                                 <Icon name="medal" style={{ color: '#605eff' }} />
                                 <Input
                                     placeholder="Type Here"
                                     value={this.state.currentValue}
-                                    onChangeText={text => this.setState({ currentValue: text, showSuggestions: true })}
+                                    onChangeText={text => this.setState({ currentValue: text, showSuggestions: true, error: false })}
                                     onFocus={() => this.setState({ showSuggestions: true })}
                                     onBlur={() => this.setState({ showSuggestions: false })}
                                 />
 
-                                <TouchableOpacity onPress={() => this.addItem()} style={{ padding: 6 }}>
+                                <TouchableOpacity onPress={() => this.addItem()} style={{ padding: 6, color: this.isError() ? 'red' : '#ccc' }}>
                                     <Icon name="add" />
                                 </TouchableOpacity>
 

@@ -64,7 +64,7 @@ class BasicInfoScreen extends Component {
     }
     onNextPress = () => {
         const userInfo = this.props.navigation.getParam("userInfo", {});
-        if (this.validateForm()) {
+        if (this.validateLengthForm() && this.validateFormatForm()) {
             this.props.navigation.navigate('SelectClinic', {
                 userInfo: {
                     ...userInfo,
@@ -83,19 +83,16 @@ class BasicInfoScreen extends Component {
         }
     }
 
-    validateForm = () => {
+    validateLengthForm = () => {
         let errorString = '';
         if (!this.state.name.length) {
             errorString = errorString + 'name,';
         }
-        if (!this.state.phone || this.state.phone.length > 10) {
+        if (!this.state.phone.length) {
             errorString = errorString + 'phone,';
         }
         if (!this.state.email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(this.state.email)) {
-                errorString = errorString + 'email,';
-            };
+            errorString = errorString + 'email,';
         }
         if (!this.state.dob) {
             errorString = errorString + 'dob';
@@ -113,6 +110,31 @@ class BasicInfoScreen extends Component {
         return !errorString.length;
     }
 
+
+    validateFormatForm = () => {
+        let errorString = '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(this.state.email)) {
+            errorString = errorString + 'email,';
+            Toast.show({
+                text: "Fill in valid email address",
+                type: 'danger',
+                duration: 3000,
+            })
+        };
+        if (this.state.phone.length !== 10) {
+            errorString = errorString + 'phone';
+            Toast.show({
+                text: "Fill in valid phone number",
+                type: 'danger',
+                duration: 3000,
+            })
+        }
+        this.setState({
+            error: errorString.length ? errorString : false
+        });
+        return !errorString.length;
+    }
     isError = type => {
         if (this.state.error && this.state.error.includes(type)) {
             return true;
