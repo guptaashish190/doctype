@@ -117,6 +117,7 @@ class SelectHospitalScreen extends Component {
         });
     }
 
+
     render() {
         const TitleAnimatedStyle = {
             opacity: this.state.titleOpacity,

@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     marginTop: 100,
-    marginBottom: 100,
+    marginBottom: 60,
     fontSize: 50,
     color: Colors.dark,
     fontFamily: Fonts.Montserrat.regular

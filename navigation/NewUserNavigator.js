@@ -15,6 +15,7 @@ import PatientSelectHomeScreen from '../screens/NewUser/Patient/PatientSelectHom
 import PatientBodyScreen from '../screens/NewUser/Patient/PatientBodyScreen';
 
 export default createAppContainer(createStackNavigator({
+    BasicInfo: BasicInfoScreen,
     Start: StartScreen,
     UNPass: UsernamePasswordScreen,
     PatientBody: PatientBodyScreen,
@@ -23,7 +24,6 @@ export default createAppContainer(createStackNavigator({
     SelectProfilePic: SelectProfilePicScreen,
     AddQualificationsSpec: AddQualificationsSpecScreen,
     SelectClinic: SelectClinicScreen,
-    BasicInfo: BasicInfoScreen,
     PatientSelectProfilePric: PatientSelectProfilePicScreen,
     PatientSelectHome: PatientSelectHomeScreen,
 }, {

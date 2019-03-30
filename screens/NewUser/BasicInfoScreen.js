@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, NativeModules, View, Platform, TouchableOpacity, Animated, Easing } from 'react-native';
-import { Container, Content, Text, Item, Input, DatePicker, ActionSheet, Icon } from 'native-base';
+import { Container, Content, Text, Item, Input, DatePicker, ActionSheet, Icon, Toast } from 'native-base';
 import Colors from '../../constants/Colors';
-import Fonts from '../../constants/Fonts';
 import { StatusBarHeight } from '../../constants/Layout';
 
 var BUTTONS = ["Married", 'Unmarried'];
@@ -15,8 +14,9 @@ class BasicInfoScreen extends Component {
         name: '',
         phone: '',
         email: '',
-        dob: '',
+        dob: null,
         mStatus: 'Unmarried',
+        error: false,
         titleOpacity: new Animated.Value(0),
         mainOpacity: new Animated.Value(0),
     }
@@ -58,26 +58,66 @@ class BasicInfoScreen extends Component {
 
     setDate = (date) => {
         this.setState({
-            dob: date
+            dob: date,
+            error: this.state.error ? this.state.error.replace('dob', '') : false
         });
     }
     onNextPress = () => {
         const userInfo = this.props.navigation.getParam("userInfo", {});
-        this.props.navigation.navigate('SelectClinic', {
-            userInfo: {
-                ...userInfo,
-                basic: {
-                    name: this.state.name,
-                    dob: this.state.dob,
-                    mStatus: this.state.mStatus
-                },
-                contact: {
-                    phone: this.state.phone,
-                    email: this.state.email,
-                    address: null
+        if (this.validateForm()) {
+            this.props.navigation.navigate('SelectClinic', {
+                userInfo: {
+                    ...userInfo,
+                    basic: {
+                        name: this.state.name,
+                        dob: this.state.dob,
+                        mStatus: this.state.mStatus
+                    },
+                    contact: {
+                        phone: this.state.phone,
+                        email: this.state.email,
+                        address: null
+                    }
                 }
-            }
+            });
+        }
+    }
+
+    validateForm = () => {
+        let errorString = '';
+        if (!this.state.name.length) {
+            errorString = errorString + 'name,';
+        }
+        if (!this.state.phone || this.state.phone.length > 10) {
+            errorString = errorString + 'phone,';
+        }
+        if (!this.state.email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(this.state.email)) {
+                errorString = errorString + 'email,';
+            };
+        }
+        if (!this.state.dob) {
+            errorString = errorString + 'dob';
+        }
+        this.setState({
+            error: errorString.length ? errorString : false
         });
+        if (errorString.length) {
+            Toast.show({
+                text: "Fill all the fields",
+                type: 'danger',
+                duration: 3000,
+            })
+        }
+        return !errorString.length;
+    }
+
+    isError = type => {
+        if (this.state.error && this.state.error.includes(type)) {
+            return true;
+        }
+        return false;
     }
 
     render() {
@@ -103,31 +143,35 @@ class BasicInfoScreen extends Component {
                     </Animated.Text>
                     <Animated.View style={[styles.mainContainer, MainAnimatedStyle]}>
                         <View style={styles.inputContainer}>
-                            <Item style={[styles.input, styles.item]} rounded>
+                            <Item style={[styles.input, styles.item]} error={this.isError('name')} rounded>
                                 <Icon name="person" style={styles.icon} />
                                 <Input
                                     placeholder="Name"
                                     value={this.state.name}
-                                    onChangeText={text => this.setState({ name: text })}
+                                    onChangeText={text => this.setState({ name: text, error: this.state.error ? this.state.error.replace('name', '') : false })}
                                 />
+                                {this.isError('name') ? <Icon name="close-circle" /> : null}
                             </Item>
-                            <Item rounded style={[styles.datePicker, styles.item]}>
+                            <Item rounded style={[styles.datePicker, styles.item]} error={this.isError('dob')} >
                                 <Icon name="calendar" style={styles.icon} />
-                                <DatePicker
-                                    defaultDate={new Date(2018, 4, 4)}
-                                    minimumDate={new Date(2018, 1, 1)}
-                                    maximumDate={new Date(2018, 12, 31)}
-                                    locale={"en"}
-                                    timeZoneOffsetInMinutes={undefined}
-                                    modalTransparent={false}
-                                    animationType={"fade"}
-                                    androidMode={"default"}
-                                    placeHolderText="Date of birth"
-                                    textStyle={{ color: "#444" }}
-                                    placeHolderTextStyle={{ color: "#666" }}
-                                    onDateChange={(date) => this.setDate(date)}
-                                    disabled={false}
-                                />
+
+                                <View style={{ flexGrow: 1 }}>
+                                    <DatePicker
+                                        defaultDate={new Date(1996, 1, 1)}
+                                        minimumDate={new Date(1900, 1, 1)}
+                                        maximumDate={new Date()}
+                                        locale={"en"}
+                                        modalTransparent={false}
+                                        animationType={"fade"}
+                                        androidMode={"default"}
+                                        placeHolderText="Date of birth"
+                                        textStyle={{ color: "#444" }}
+                                        placeHolderTextStyle={{ color: "#666" }}
+                                        onDateChange={(date) => this.setDate(date)}
+                                        disabled={false}
+                                    />
+                                </View>
+                                {this.isError('dob') ? <Icon name="close-circle" /> : null}
                             </Item>
                             <Item style={[styles.datePicker, styles.item]} rounded>
                                 <Icon name="people" style={styles.icon} />
@@ -137,22 +181,24 @@ class BasicInfoScreen extends Component {
                                     </Text>
                                 </TouchableOpacity>
                             </Item>
-                            <Item style={[styles.input, styles.item]} rounded>
+                            <Item style={[styles.input, styles.item]} error={this.isError('phone')} rounded>
                                 <Icon name="call" style={styles.icon} />
                                 <Input
                                     value={this.state.phone}
-                                    onChangeText={text => this.setState({ phone: text })}
+                                    onChangeText={text => this.setState({ phone: text, error: this.state.error ? this.state.error.replace('phone', '') : false })}
                                     keyboardType="numeric"
                                     placeholder="Phone Number" />
+                                {this.isError('phone') ? <Icon name="close-circle" /> : null}
                             </Item>
 
-                            <Item style={[styles.input, styles.item]} rounded>
+                            <Item style={[styles.input, styles.item]} error={this.isError('email')} rounded>
                                 <Icon name="mail" style={styles.icon} />
                                 <Input
                                     placeholder="Email"
                                     value={this.state.email}
-                                    onChangeText={text => this.setState({ email: text })}
+                                    onChangeText={text => this.setState({ email: text, error: this.state.error ? this.state.error.replace('email', '') : false })}
                                 />
+                                {this.isError('email') ? <Icon name="close-circle" /> : null}
                             </Item>
                         </View>
                         <TouchableOpacity onPress={() => this.onNextPress()} style={styles.nextButtonContainer} activeOpacity={0.8}>
@@ -206,9 +252,6 @@ const styles = StyleSheet.create({
     },
     datePicker: {
         width: '100%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 50,
         padding: 8,
     },
     item: {
