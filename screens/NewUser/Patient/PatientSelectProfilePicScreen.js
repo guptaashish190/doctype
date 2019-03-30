@@ -61,6 +61,10 @@ class PatientSelectProfilePicScreen extends Component {
         }
         const auth = { ...userInfo.auth }
         userInfo.auth = undefined;
+        //Initialize
+        userInfo.current = [];
+        userInfo.history = [];
+        userInfo.doctors = [];
         const patient = {
             user: userInfo,
             type: 'Patient'

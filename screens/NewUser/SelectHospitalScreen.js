@@ -128,7 +128,7 @@ class SelectHospitalScreen extends Component {
 
 
     validate = () => {
-        if (!this.state.searchValue.length) {
+        if (!this.state.selectedPlaceTitle.length) {
             this.setState({
                 error: 'hospital'
             });

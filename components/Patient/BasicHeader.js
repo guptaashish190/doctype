@@ -12,17 +12,17 @@ class BasicHeader extends Component {
 
     render() {
         return (
-            <Header style={{ backgroundColor: Colors.lightBlue }}>
+            <Header style={{ backgroundColor: Colors.headerBackground }}>
                 <Left>
                     <Button onPress={() => this.onMenuPress()} style={styles.menuButton} >
                         <Icon name='menu' style={{ color: Colors.primary }} />
                     </Button>
                 </Left>
                 <Body>
-                    <Title style={{ color: Colors.primary }}>{this.props.title}</Title>
+                    <Title style={{ color: 'black' }}>{this.props.title}</Title>
                 </Body>
                 <Right />
-            </Header>
+            </Header >
         );
     }
 }

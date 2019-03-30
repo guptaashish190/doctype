@@ -7,8 +7,8 @@ import LoginNavigator from './LoginNavigator';
 import NewUserNavigator from './NewUserNavigator';
 
 export default createAppContainer(createSwitchNavigator({
-  NewUser: NewUserNavigator,
-  Login: LoginNavigator,
   Patient: PatientNavigator,
+  Login: LoginNavigator,
+  NewUser: NewUserNavigator,
   Doctor: DoctorNavigator,
 }));

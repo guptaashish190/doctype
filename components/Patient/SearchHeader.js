@@ -186,7 +186,7 @@ SearchHeader.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Colors.headerBackground,
         width: '100%',
         alignItems: 'center'
     },

@@ -42,16 +42,12 @@ const styles = StyleSheet.create({
     marginTop: StatusBarHeight,
     paddingBottom: 20
   },
-  menuButton: {
-    backgroundColor: 'transparent',
-    elevation: 0,
-  },
   profileImage: {
     width: 200,
     height: 200,
     borderRadius: 200,
     borderWidth: 2,
-    borderColor: Colors.primary
+    borderColor: '#ccc'
   },
   profileImageContainer: {
     marginTop: 40,

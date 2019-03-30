@@ -37,7 +37,7 @@ class BasicCard extends Component {
         return (
             <Card style={styles.container}>
                 <CardItem header style={styles.header}>
-                    <Text style={{ color: 'white' }}>{this.props.title}</Text>
+                    <Text style={{ color: 'black' }}>{this.props.title}</Text>
                 </CardItem>
                 {this.getMappedDetails()}
             </Card>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         zIndex: 0
     },
     header: {
-        backgroundColor: Colors.dark,
+        backgroundColor: Colors.lightBackground,
         borderTopLeftRadius: 20,
         width: '100%',
         height: 40,

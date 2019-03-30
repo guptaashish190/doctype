@@ -37,7 +37,7 @@ class SearchScreen extends Component {
     }
 
     mapDoctors = () => this.state.doctors.map(doctor => (
-        <DoctorSearchCard key={shortid.generate()} doctor={doctor} />
+        <DoctorSearchCard navigation={this.props.navigation} key={shortid.generate()} doctor={doctor} />
     ))
 
     render() {
@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     },
     scrollViewStyle: {
         alignItems: 'center',
-        flex: 1,
     }
 });
 

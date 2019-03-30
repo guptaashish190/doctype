@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { StyleSheet, Animated, Easing } from 'react-native';
+import { StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
 import { Card, CardItem, Text } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import Colors from '../../constants/Colors';
@@ -16,6 +16,13 @@ class DoctorSearchCard extends Component {
             duration: 600,
             easing: Easing.bezier(.16, .83, .23, 1.03)
         }).start();
+        console.log(this.props.doctor.qualifications);
+    }
+
+    onPress = () => {
+        this.props.navigation.navigate('DoctorDetail', {
+            doctor: this.props.doctor
+        });
     }
 
     render() {
@@ -26,40 +33,42 @@ class DoctorSearchCard extends Component {
             alignItems: 'center'
         }
         return (
-            <Animated.View style={animatedContStyle}>
-                <Card listItemPadding style={styles.container}>
-                    <CardItem style={[styles.head, styles.item]}>
-                        <Text style={styles.headText}>
-                            {this.props.doctor.basic.name}
-                        </Text>
-                        <Text style={[styles.infoText, styles.right]}>
-                            {this.props.doctor.qualifications[0]}
-                        </Text>
-                    </CardItem>
+            <TouchableOpacity style={{ width: '100%' }} activeOpacity={0.8} onPress={() => this.onPress()}>
+                <Animated.View style={animatedContStyle}>
+                    <Card listItemPadding style={styles.container}>
+                        <CardItem style={[styles.head, styles.item]}>
+                            <Text style={styles.headText}>
+                                {this.props.doctor.basic.name}
+                            </Text>
+                            <Text style={[styles.infoText, styles.right]}>
+                                {this.props.doctor.qualifications ? this.props.doctor.qualifications[0] : '-'}
+                            </Text>
+                        </CardItem>
 
 
-                    <CardItem style={[styles.item]}>
-                        <Text style={styles.infoKey}>Phone </Text>
-                        <Text>
-                            {this.props.doctor.contact.phone[0]}
-                        </Text>
-                    </CardItem>
+                        <CardItem style={[styles.item]}>
+                            <Text style={styles.infoKey}>Phone </Text>
+                            <Text>
+                                {this.props.doctor.contact.phone[0]}
+                            </Text>
+                        </CardItem>
 
-                    <CardItem style={[styles.item]}>
-                        <Text style={styles.infoKey}>Email</Text>
-                        <Text>
-                            {this.props.doctor.contact.email[0]}
-                        </Text>
-                    </CardItem>
+                        <CardItem style={[styles.item]}>
+                            <Text style={styles.infoKey}>Email</Text>
+                            <Text>
+                                {this.props.doctor.contact.email[0]}
+                            </Text>
+                        </CardItem>
 
-                    <CardItem style={[styles.item, styles.bottom]}>
-                        <Text style={styles.infoKey}>Address</Text>
-                        <Text>
-                            {this.props.doctor.contact.address[0]}
-                        </Text>
-                    </CardItem>
-                </Card>
-            </Animated.View>
+                        <CardItem style={[styles.item, styles.bottom]}>
+                            <Text style={styles.infoKey}>Address</Text>
+                            <Text>
+                                {this.props.doctor.contact.address ? this.props.doctor.contact.address[0] : '-'}
+                            </Text>
+                        </CardItem>
+                    </Card>
+                </Animated.View>
+            </TouchableOpacity>
         );
     }
 }
@@ -83,8 +92,8 @@ const styles = StyleSheet.create({
         fontSize: 13,
     },
     infoKey: {
+        marginRight: 7,
         color: '#afafaf',
-        marginRight: 5,
         fontStyle: 'italic'
     },
     item: {
@@ -98,6 +107,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 10,
         borderBottomWidth: 1,
         borderColor: '#ddd',
+        width: '100%',
         justifyContent: 'space-between'
     },
     right: {
@@ -105,6 +115,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 12,
         padding: 10,
+        width: '50%',
+        textAlign: 'right'
     },
     bottom: {
         borderBottomLeftRadius: 10,
