@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         width: '90%',
         backgroundColor: Colors.backgroundColor,
-        elevation: 10,
+        elevation: 4,
         borderRadius: 10,
     },
     headText: {
