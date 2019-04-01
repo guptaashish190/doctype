@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Colors.backgroundColor,
-        marginTop: StatusBarHeight
+        paddingTop: StatusBarHeight
     },
     title: {
         fontSize: 30,

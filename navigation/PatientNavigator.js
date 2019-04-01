@@ -6,10 +6,11 @@ import PatientScreen from '../screens/Patient/ProfileScreen';
 import SearchScreen from '../screens/Patient/SearchScreen';
 import SettingsScreen from '../screens/Patient/SettingsScreen';
 import DoctorDetailScreen from '../screens/Patient/DoctorDetailScreen';
+import MyAppointmentsScreen from '../screens/Patient/MyAppointmentsScreen';
 
 const SearchNavigator = createStackNavigator({
-  DoctorDetail: DoctorDetailScreen,
   Search: SearchScreen,
+  DoctorDetail: DoctorDetailScreen,
 }, {
     headerMode: 'none',
     navigationOptions: {
@@ -21,4 +22,5 @@ export default createAppContainer(createDrawerNavigator({
   Search: SearchNavigator,
   Profile: PatientScreen,
   Settings: SettingsScreen,
+  MyAppointments: MyAppointmentsScreen,
 }));

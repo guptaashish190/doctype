@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: Colors.backgroundColor,
-        marginTop: StatusBarHeight,
+        paddingTop: StatusBarHeight,
     },
     content: {
         paddingTop: 20,

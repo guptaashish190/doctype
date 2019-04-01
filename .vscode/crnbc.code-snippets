@@ -29,7 +29,7 @@
 			"    justifyContent: 'center',",
 			"    alignItems: 'center',",
 			"    backgroundColor: Colors.backgroundColor,",
-			"    marginTop: StatusBarHeight",
+			"    paddingTop: StatusBarHeight",
 			"  },",
 			"});",
 			"",

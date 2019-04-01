@@ -12,60 +12,13 @@ import Layout from '../../constants/Layout';
 import ProfilePicAnimHeader from '../../components/Patient/ProfilePicAnimHeader';
 import Axios from 'axios';
 
-const TestDoctor = {
-    _id: "5c9e10a54e235c0b3cd88ac7",
-    basic: {
-        name: "Manisha Gupta",
-        dob: "1998-02-05T18:30:00.000Z",
-        maritalStatus: "Unmarried"
-    },
-    appSpec: {
-        profilePicture: {
-            url: 'http://wwsthemes.com/themes/medwise/v1.4/images/doctor-single.jpg',
-            local: 'http://wwsthemes.com/themes/medwise/v1.4/images/doctor-single.jpg'
-        }
-    },
-    currentPatients: [],
-    allPatients: [],
-    contact: {
-        phone: [
-            9858985785,
-            986584582
-        ],
-        address: [
-            "Powai, Mumbai",
-            "st5 vaishalehktu skns2"
-        ],
-        email: [
-            "guptaashsish190@gmail.com",
-            "ashishgipta201@gmail.com"
-        ]
-    },
-    qualifications: [
-        "MD Gynaecology",
-        "MBBS",
-    ],
-    clinic: {
-        name: 'Some Healthcare Camily Clinic',
-        location: [
-            80.20186,
-            13.07209
-        ]
-    },
-    hospital: {
-        name: 'GSVM Hospital',
-        location: [
-            80.20186,
-            13.07209
-        ]
-    }
-}
-
 const PROFILEPIC_WIDTH = 200;
 const MIN_PROFILE_WIDTH = 40;
 const PROFILEPIC_MARGIN = 20;
 
 class DoctorDetailScreen extends Component {
+
+    doctor = this.props.navigation.getParam('doctor', {});
     // doctor = this.props.navigation.getParam('doctor', {});
     state = {
         scrollY: new Animated.Value(0),
@@ -80,12 +33,12 @@ class DoctorDetailScreen extends Component {
     }
     getAge = () => {
         const currentYear = new Date().getFullYear();
-        const doctorYear = new Date(TestDoctor.basic.dob).getFullYear();
+        const doctorYear = new Date(this.doctor.basic.dob).getFullYear();
         return currentYear - doctorYear;
     }
 
     getQualifications = () => (
-        TestDoctor.qualifications.map(elem => (
+        this.doctor.qualifications.map(elem => (
             <Button style={styles.qTag} key={shortid.generate()}>
                 <Text uppercase={false} style={{
                     color: 'white',
@@ -132,7 +85,7 @@ class DoctorDetailScreen extends Component {
                 shareBio: this.state.shareBio,
                 status: 'Requested',
                 patientID: this.props.userID,
-                doctorID: TestDoctor._id
+                doctorID: this.doctor._id
             }
             Axios.post(`${config.backend}/patient/requestAppointment`, body).then(({ data }) => {
                 console.log(data);
@@ -216,7 +169,7 @@ class DoctorDetailScreen extends Component {
         }
         return (
             <Container style={styles.container}>
-                <ProfilePicAnimHeader ppMargin={PROFILEPIC_MARGIN} scrollY={this.state.scrollY} ppMaxWidth={PROFILEPIC_WIDTH} ppImageUri={TestDoctor.appSpec.profilePicture.local} ppWidth={MIN_PROFILE_WIDTH} navigation={this.props.navigation} title={TestDoctor.basic.name} />
+                <ProfilePicAnimHeader ppMargin={PROFILEPIC_MARGIN} scrollY={this.state.scrollY} ppMaxWidth={PROFILEPIC_WIDTH} ppImageUri={this.doctor.appSpec.profilePicture.local} ppWidth={MIN_PROFILE_WIDTH} navigation={this.props.navigation} title={this.doctor.basic.name} />
                 <Content style={{
                     overflow: 'hidden',
                 }}
@@ -224,7 +177,7 @@ class DoctorDetailScreen extends Component {
                         alignItems: 'center'
                     }}
                 >
-                    <Animated.Image style={[styles.profilePicture, ImageAnimatedStyle]} source={{ uri: TestDoctor.appSpec.profilePicture.local }} />
+                    <Animated.Image style={[styles.profilePicture, ImageAnimatedStyle]} source={{ uri: this.doctor.appSpec.profilePicture.local }} />
                     <ScrollView
                         onScroll={Animated.event([{
                             nativeEvent: { contentOffset: { y: this.state.scrollY } }
@@ -237,7 +190,7 @@ class DoctorDetailScreen extends Component {
                             <View style={styles.basicInfo}>
                                 <View style={styles.info}>
                                     <Text style={styles.infoKey}>Name</Text>
-                                    <Text style={styles.infoText}>{TestDoctor.basic.name}</Text>
+                                    <Text style={styles.infoText}>{this.doctor.basic.name}</Text>
                                 </View>
                                 <View style={styles.info}>
                                     <Text style={styles.infoKey}>Age</Text>
@@ -245,7 +198,7 @@ class DoctorDetailScreen extends Component {
                                 </View>
                                 <View style={styles.info}>
                                     <Text style={styles.infoKey}>Marital Status</Text>
-                                    <Text style={styles.infoText}>{TestDoctor.basic.maritalStatus || '-'}</Text>
+                                    <Text style={styles.infoText}>{this.doctor.basic.maritalStatus || '-'}</Text>
                                 </View>
                                 <View style={[styles.info, { flexDirection: 'column' }]}>
                                     <Text style={styles.infoKey}>Qualifications</Text>
@@ -256,41 +209,41 @@ class DoctorDetailScreen extends Component {
                             </View>
                             <View style={styles.clinic}>
                                 <Text style={styles.clinicText}>Clinic</Text>
-                                <Text style={styles.clinicName}>{TestDoctor.clinic.name}</Text>
+                                <Text style={styles.clinicName}>{this.doctor.clinic.name}</Text>
                                 <View pointerEvents='none'>
                                     <MapView
                                         style={styles.map}
                                         initialRegion={{
-                                            latitude: TestDoctor.clinic.location[1],
-                                            longitude: TestDoctor.clinic.location[0],
+                                            latitude: this.doctor.clinic.location[1],
+                                            longitude: this.doctor.clinic.location[0],
                                             longitudeDelta: 0.04,
                                             latitudeDelta: 0.04,
                                         }}
                                     >
                                         <MapView.Marker
-                                            title={TestDoctor.clinic.name}
-                                            coordinate={{ longitude: TestDoctor.clinic.location[0], latitude: TestDoctor.clinic.location[1] }}
+                                            title={this.doctor.clinic.name}
+                                            coordinate={{ longitude: this.doctor.clinic.location[0], latitude: this.doctor.clinic.location[1] }}
                                         />
                                     </MapView>
                                 </View>
                             </View>
                             <View style={styles.clinic}>
                                 <Text style={styles.clinicText}>Hospital</Text>
-                                <Text style={styles.clinicName}>{TestDoctor.hospital.name}</Text>
+                                <Text style={styles.clinicName}>{this.doctor.hospital.name}</Text>
 
                                 <View pointerEvents='none'>
                                     <MapView
                                         style={styles.map}
                                         initialRegion={{
-                                            latitude: TestDoctor.hospital.location[1],
-                                            longitude: TestDoctor.hospital.location[0],
+                                            latitude: this.doctor.hospital.location[1],
+                                            longitude: this.doctor.hospital.location[0],
                                             longitudeDelta: 0.04,
                                             latitudeDelta: 0.04,
                                         }}
                                     >
                                         <MapView.Marker
-                                            title={TestDoctor.hospital.name}
-                                            coordinate={{ longitude: TestDoctor.hospital.location[0], latitude: TestDoctor.hospital.location[1] }}
+                                            title={this.doctor.hospital.name}
+                                            coordinate={{ longitude: this.doctor.hospital.location[0], latitude: this.doctor.hospital.location[1] }}
                                         />
                                     </MapView>
                                 </View>
@@ -393,7 +346,7 @@ class DoctorDetailScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: StatusBarHeight,
+        paddingTop: StatusBarHeight,
     },
     basicInfo: {
         width: '90%',

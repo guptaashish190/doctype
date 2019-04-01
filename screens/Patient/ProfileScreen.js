@@ -39,7 +39,7 @@ class PatientProfile extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: StatusBarHeight,
+    paddingTop: StatusBarHeight,
     paddingBottom: 20
   },
   profileImage: {
