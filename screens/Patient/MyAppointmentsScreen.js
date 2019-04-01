@@ -62,9 +62,12 @@ class MyAppointmentsScreen extends Component {
     }
 
     componentWillMount() {
-        // Axios.get(`${config.backend}/patient/getAppointments`, { params: { patientID: this.props.userID } }).then(({ data }) => {
-        //     console.log(data);
-        // });
+        Axios.get(`${config.backend}/patient/getAppointments`, { params: { patientID: this.props.userID } }).then(({ data }) => {
+            console.log(data);
+            this.setState({
+                appointments: data.appointments
+            });
+        });
     }
 
     timeToString = ({ hour, minute }) => {
@@ -76,8 +79,9 @@ class MyAppointmentsScreen extends Component {
     }
 
     getTimeLeft = date => {
-        var date2 = new Date();
-        var diffDays = parseInt((date2 - date) / (1000 * 60 * 60 * 24));
+        const date1 = new Date();
+        const date2 = new Date(date);
+        const diffDays = parseInt((date2 - date1) / (1000 * 60 * 60 * 24));
         return diffDays;
     }
 
@@ -95,10 +99,10 @@ class MyAppointmentsScreen extends Component {
     }
 
     getAppointments = () => {
-        return TestApp.map(appointment => (
+        return this.state.appointments.map(appointment => (
             <View style={[styles.appointmentCard, { borderColor: this.getCardColor(appointment.status) }]} key={shortid.generate()}>
                 <View style={[styles.item, styles.name]}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{appointment.doctorname}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{appointment.doctorName}</Text>
                     <Text style={{ fontWeight: 'bold', color: '#aaa' }}>{this.getTimeLeft(appointment.date)} Days Left</Text>
                 </View>
                 <View style={[styles.item]}>
@@ -108,7 +112,7 @@ class MyAppointmentsScreen extends Component {
                     <Text style={{ fontSize: 15, color: '#aaa', fontStyle: 'italic' }}>{appointment.description}</Text>
                 </View>
                 <View style={[styles.item, { flexDirection: 'row' }]}>
-                    <Text style={{ paddingRight: 10, borderRightWidth: 1, borderRightColor: '#ccc' }}>{appointment.date.toLocaleDateString()}</Text>
+                    <Text style={{ paddingRight: 10, borderRightWidth: 1, borderRightColor: '#ccc' }}>{new Date(appointment.date).toLocaleDateString()}</Text>
                     <Text style={{ paddingLeft: 10 }}>{this.timeToString(appointment.time)}</Text>
                 </View>
                 <View style={[styles.item]}>
