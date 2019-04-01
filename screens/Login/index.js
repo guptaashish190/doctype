@@ -44,6 +44,7 @@ class Login extends Component {
       if (this.state.type === 'P') {
         Axios.get(`${config.backend}/patient/verify`, data).then(({ data }) => {
           if (data.valid) {
+            console.log(data.data);
             const doctor = {
               user: data.data,
               type: 'Patient'
@@ -65,7 +66,7 @@ class Login extends Component {
       } else {
         Axios.get(`${config.backend}/doctor/verify`, data).then(({ data }) => {
           if (data.valid) {
-            console.log(data);
+            console.log(data.data);
             const doctor = {
               user: data.data,
               type: 'Doctor'

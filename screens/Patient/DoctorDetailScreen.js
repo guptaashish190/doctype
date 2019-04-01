@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, ScrollView, Animated, TimePickerAndroid, KeyboardAvoidingView } from 'react-native';
-import { Container, Content, Text, Input, Button, Item, Icon, Textarea, DatePicker, CheckBox, ListItem, Body } from 'native-base';
+import { StyleSheet, View, TouchableOpacity, ScrollView, Animated, TimePickerAndroid } from 'react-native';
+import { Container, Content, Text, Input, Button, Toast, Item, Icon, Textarea, DatePicker, CheckBox } from 'native-base';
 import shortid from 'shortid';
+import FlashMessage, { showMessage, hideMessage } from 'react-native-flash-message';
 import { MapView } from 'expo';
-import MapThemes from '../../constants/MapThemes';
+import { connect } from 'react-redux';
+import config from '../../config';
 import { StatusBarHeight } from '../../constants/Layout'
 import Colors from '../../constants/Colors';
 import Layout from '../../constants/Layout';
 import ProfilePicAnimHeader from '../../components/Patient/ProfilePicAnimHeader';
-import { hidden } from 'ansi-colors';
+import Axios from 'axios';
 
 const TestDoctor = {
+    _id: "5c9e10a54e235c0b3cd88ac7",
     basic: {
         name: "Manisha Gupta",
         dob: "1998-02-05T18:30:00.000Z",
@@ -71,6 +74,9 @@ class DoctorDetailScreen extends Component {
             minute: null
         },
         selectedDate: null,
+        problemName: '',
+        problemDesc: '',
+        shareBio: true,
     }
     getAge = () => {
         const currentYear = new Date().getFullYear();
@@ -89,7 +95,10 @@ class DoctorDetailScreen extends Component {
         ))
     )
     setDate = (newDate) => {
-        this.setState({ selectedDate: newDate });
+        this.setState({
+            selectedDate: newDate,
+            error: this.state.error ? this.state.error.replace('date', '') : null
+        });
     }
     openTimePicker = async () => {
         try {
@@ -102,13 +111,81 @@ class DoctorDetailScreen extends Component {
                 this.setState({
                     selectedTime: {
                         hour,
-                        minute
-                    }
+                        minute,
+                    },
+                    error: this.state.error ? this.state.error.replace('time', '') : null
                 });
             }
         } catch ({ code, message }) {
             console.warn('Cannot open time picker', message);
         }
+    }
+
+    onSubmit = () => {
+
+        if (this.validateFormatForm()) {
+            const body = {
+                date: this.state.selectedDate,
+                time: this.state.selectedTime,
+                name: this.state.problemName,
+                description: this.state.problemDesc,
+                shareBio: this.state.shareBio,
+                status: 'Requested',
+                patientID: this.props.userID,
+                doctorID: TestDoctor._id
+            }
+            Axios.post(`${config.backend}/patient/requestAppointment`, body).then(({ data }) => {
+                console.log(data);
+                if (data.success) {
+                    showMessage({
+                        message: "Success",
+                        description: `The appointment has been requested to the Doctor: ${TestDoctor.basic.name} on ${this.state.selectedDate.getDate()}/${this.state.selectedDate.getMonth()}/${this.state.selectedDate.getFullYear()} at ${this.state.selectedTime.hour}:${this.state.selectedTime.minute}`,
+                        type: "success",
+                        duration: 2500
+                    });
+                } else {
+                    showMessage({
+                        message: "Error",
+                        description: "Error sending request to the doctor. Try again",
+                        type: "danger",
+                        duration: 2500
+                    });
+                }
+            });
+        } else {
+            Toast.show({
+                text: "Fill all the fields",
+                type: 'danger',
+                duration: 3000,
+            })
+        }
+    }
+
+    validateFormatForm = () => {
+        let errorString = '';
+        if (!this.state.selectedDate) {
+            errorString = errorString + 'date';
+        }
+        if (this.state.selectedTime.hour === null) {
+            errorString = errorString + 'time';
+        }
+        if (!this.state.problemName) {
+            errorString = errorString + 'name';
+        }
+        if (!this.state.problemDesc) {
+            errorString = errorString + 'desc';
+        }
+        this.setState({
+            error: errorString.length ? errorString : null,
+        });
+        return errorString.length === 0
+
+    }
+    isError = type => {
+        if (this.state.error && this.state.error.includes(type)) {
+            return true;
+        }
+        return false;
     }
 
     render() {
@@ -221,55 +298,84 @@ class DoctorDetailScreen extends Component {
                             <View style={[styles.basicInfo, styles.form]}>
                                 <Text style={styles.clinicText}>Form</Text>
                                 <Text style={styles.clinicName}>Fill in the following form</Text>
-                                <Item style={{ marginTop: 20 }} rounded>
+                                <Item error={this.isError('name')} style={{ marginTop: 20 }} rounded>
                                     <Icon name="heart" style={{ color: Colors.primary }} />
                                     <Input
                                         placeholderTextColor="#bbb"
                                         placeholder="Problem Name"
                                         value={this.state.problemName}
-                                        onChangeText={t => this.setState({ problemName: t })} />
+                                        onChangeText={t => this.setState({ problemName: t, error: this.state.error ? this.state.error.replace('name', '') : null })} />
+                                    {this.isError('name') ? <Icon name="close-circle" /> : null}
                                 </Item>
-                                <View style={styles.textArea}>
+                                <View style={[styles.textArea, {
+                                    borderColor: this.isError('desc') ? 'red' : '#ccc',
+                                }]}>
                                     <Icon name="list" style={{ color: Colors.primary }} />
-                                    <Textarea placeholderTextColor="#bbb" style={styles.textAreaText} rowSpan={5} placeholder="Short Problem Description" />
-                                </View>
-                                <TouchableOpacity style={styles.timeField}>
-                                    <Icon name="calendar" style={{ color: Colors.primary, marginRight: 10 }} />
-                                    <DatePicker
-                                        defaultDate={new Date()}
-                                        minimumDate={new Date()}
-                                        locale={"en"}
-                                        modalTransparent={false}
-                                        animationType="fade"
-                                        androidMode="default"
-                                        placeHolderText="Select Appointment Date"
-                                        textStyle={{ color: "black" }}
-                                        placeHolderTextStyle={{ color: "#bbb" }}
-                                        onDateChange={this.setDate}
-                                        disabled={false}
+                                    <Textarea
+                                        placeholderTextColor="#bbb"
+                                        style={styles.textAreaText}
+                                        rowSpan={5}
+                                        placeholder="Short Problem Description"
+                                        onChangeText={t => this.setState({ problemDesc: t, error: this.state.error ? this.state.error.replace('desc', '') : null })}
+                                        value={this.state.problemDesc}
                                     />
+
+                                    {this.isError('desc') ? <Icon style={{ color: 'red' }} name="close-circle" /> : null}
+                                </View>
+                                <TouchableOpacity style={[styles.timeField, {
+                                    borderColor: this.isError('date') ? 'red' : '#ccc',
+                                }]}>
+                                    <Icon name="calendar" style={{ color: Colors.primary, marginRight: 10 }} />
+                                    <View style={{ flexGrow: 1 }}>
+                                        <DatePicker
+                                            defaultDate={new Date()}
+                                            minimumDate={new Date()}
+                                            locale={"en"}
+                                            modalTransparent={false}
+                                            animationType="fade"
+                                            androidMode="default"
+                                            placeHolderText="Select Appointment Date"
+                                            textStyle={{ color: "black" }}
+                                            placeHolderTextStyle={{ color: "#bbb" }}
+                                            onDateChange={this.setDate}
+                                            disabled={false}
+                                        />
+                                    </View>
+                                    {this.isError('date') ? <Icon style={{ color: 'red' }} name="close-circle" /> : null}
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.timeField, { paddingTop: 20, paddingBottom: 20, paddingLeft: 0 }]} onPress={() => this.openTimePicker()}>
+                                <TouchableOpacity style={[styles.timeField, {
+                                    paddingTop: 20,
+                                    paddingBottom: 20,
+                                    paddingLeft: 0,
+                                    borderColor: this.isError('time') ? 'red' : '#ccc',
+                                }]}
+                                    onPress={() => this.openTimePicker()}>
                                     <Icon name="watch" style={{ color: Colors.primary, marginRight: 23 }} />
                                     {this.state.selectedTime.hour ?
 
                                         <View style={{
                                             flexDirection: 'row',
+                                            flexGrow: 1
                                         }}>
                                             <Text style={[styles.timeValue, { borderRightWidth: 1, borderColor: '#ddd' }]}>{this.state.selectedTime.hour} Hrs</Text>
                                             <Text style={styles.timeValue}>{this.state.selectedTime.minute} Mins</Text>
                                         </View>
                                         :
-                                        <Text style={{ color: '#bbb' }}>Appointment Time</Text>
+                                        <Text style={{
+                                            color: '#bbb',
+                                            flexGrow: 1
+                                        }}>Appointment Time</Text>
                                     }
+                                    {this.isError('time') ? <Icon style={{ color: 'red' }} name="close-circle" /> : null}
+
                                 </TouchableOpacity>
                                 <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 20, alignItems: 'center' }}>
-                                    <CheckBox checked />
+                                    <CheckBox onPress={() => this.setState({ shareBio: !this.state.shareBio })} checked={this.state.shareBio} />
                                     <Text style={{ fontWeight: 'bold', marginLeft: 20 }}>Share Bio</Text>
                                 </View>
                             </View>
                             <View>
-                                <Button style={styles.requestButton}>
+                                <Button onPress={() => this.onSubmit()} style={styles.requestButton}>
                                     <Text style={{
                                         fontSize: 20,
                                         fontWeight: 'bold',
@@ -279,6 +385,7 @@ class DoctorDetailScreen extends Component {
                         </View>
                     </ScrollView>
                 </Content>
+                <FlashMessage position="top" />
             </Container >
         );
     }
@@ -402,4 +509,8 @@ const styles = StyleSheet.create({
     }
 });
 
-export default DoctorDetailScreen
+const mapStateToProps = state => ({
+    userID: state.UserInfo.user._id,
+})
+
+export default connect(mapStateToProps)(DoctorDetailScreen);

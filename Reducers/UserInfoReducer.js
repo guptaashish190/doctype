@@ -1,6 +1,7 @@
 
 const INITIAL_STATE = {
     user: {
+        _id: "5c9e10a54e235c0b3cd88ac7",
         basic: {
             name: 'Ashish Gupta',
             height: 170,
