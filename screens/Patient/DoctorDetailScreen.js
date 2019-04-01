@@ -139,14 +139,14 @@ class DoctorDetailScreen extends Component {
                 if (data.success) {
                     showMessage({
                         message: "Success",
-                        description: `The appointment has been requested to the Doctor: ${TestDoctor.basic.name} on ${this.state.selectedDate.getDate()}/${this.state.selectedDate.getMonth()}/${this.state.selectedDate.getFullYear()} at ${this.state.selectedTime.hour}:${this.state.selectedTime.minute}`,
+                        description: data.message,
                         type: "success",
                         duration: 2500
                     });
                 } else {
                     showMessage({
                         message: "Error",
-                        description: "Error sending request to the doctor. Try again",
+                        description: data.message,
                         type: "danger",
                         duration: 2500
                     });

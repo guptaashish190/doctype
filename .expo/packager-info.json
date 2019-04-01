@@ -1,10 +1,10 @@
 {
   "packagerPort": 19001,
-  "packagerPid": 19544,
+  "packagerPid": 3408,
   "webpackServerPort": null,
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://dt-h6y.anonymous.doctype.exp.direct",
   "packagerNgrokUrl": "https://packager.dt-h6y.anonymous.doctype.exp.direct",
-  "ngrokPid": 18172
+  "ngrokPid": 22076
 }
