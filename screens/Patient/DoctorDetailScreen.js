@@ -22,10 +22,7 @@ class DoctorDetailScreen extends Component {
     // doctor = this.props.navigation.getParam('doctor', {});
     state = {
         scrollY: new Animated.Value(0),
-        selectedTime: {
-            hour: null,
-            minute: null
-        },
+        selectedTime: false,
         selectedDate: null,
         problemName: '',
         problemDesc: '',
@@ -48,8 +45,12 @@ class DoctorDetailScreen extends Component {
         ))
     )
     setDate = (newDate) => {
+        const date = this.state.selectedDate ? this.state.selectedDate : new Date();
+        date.setFullYear(newDate.getFullYear());
+        date.setMonth(newDate.getMonth());
+        date.setDate(newDate.getDate());
         this.setState({
-            selectedDate: newDate,
+            selectedDate: date,
             error: this.state.error ? this.state.error.replace('date', '') : null
         });
     }
@@ -61,11 +62,12 @@ class DoctorDetailScreen extends Component {
                 is24Hour: false,
             });
             if (action !== TimePickerAndroid.dismissedAction) {
+                const date = this.state.selectedDate ? this.state.selectedDate : new Date();
+                date.setHours(hour);
+                date.setMinutes(minute)
                 this.setState({
-                    selectedTime: {
-                        hour,
-                        minute,
-                    },
+                    selectedDate: date,
+                    selectedTime: 'selected',
                     error: this.state.error ? this.state.error.replace('time', '') : null
                 });
             }
@@ -74,12 +76,21 @@ class DoctorDetailScreen extends Component {
         }
     }
 
+    getTimeString = () => {
+        const hour = this.state.selectedDate.getHours();
+        const minute = this.state.selectedDate.getMinutes();
+        if (hour > 12) {
+            return `${hour - 12}:${minute < 10 ? `0${minute}` : minute} PM`;
+        } else {
+            return `${hour}:${minute < 10 ? `0${minute}` : minute} AM`;
+        }
+    }
+
     onSubmit = () => {
 
         if (this.validateFormatForm()) {
             const body = {
                 date: this.state.selectedDate,
-                time: this.state.selectedTime,
                 name: this.state.problemName,
                 description: this.state.problemDesc,
                 shareBio: this.state.shareBio,
@@ -119,7 +130,7 @@ class DoctorDetailScreen extends Component {
         if (!this.state.selectedDate) {
             errorString = errorString + 'date';
         }
-        if (this.state.selectedTime.hour === null) {
+        if (!this.state.selectedTime) {
             errorString = errorString + 'time';
         }
         if (!this.state.problemName) {
@@ -304,15 +315,8 @@ class DoctorDetailScreen extends Component {
                                 }]}
                                     onPress={() => this.openTimePicker()}>
                                     <Icon name="watch" style={{ color: Colors.primary, marginRight: 23 }} />
-                                    {this.state.selectedTime.hour ?
-
-                                        <View style={{
-                                            flexDirection: 'row',
-                                            flexGrow: 1
-                                        }}>
-                                            <Text style={[styles.timeValue, { borderRightWidth: 1, borderColor: '#ddd' }]}>{this.state.selectedTime.hour} Hrs</Text>
-                                            <Text style={styles.timeValue}>{this.state.selectedTime.minute} Mins</Text>
-                                        </View>
+                                    {this.state.selectedTime ?
+                                        <Text style={styles.timeValue}>{this.getTimeString()}</Text>
                                         :
                                         <Text style={{
                                             color: '#bbb',
