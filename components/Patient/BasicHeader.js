@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import PropTypes from 'prop-types';
 import Colors from '../../constants/Colors';
+import { Constants } from 'expo';
 
 class BasicHeader extends Component {
 
@@ -12,14 +13,18 @@ class BasicHeader extends Component {
 
     render() {
         return (
-            <Header style={{ backgroundColor: Colors.headerBackground }}>
+            <Header style={{
+                backgroundColor: Colors.primary,
+                paddingTop: Constants.statusBarHeight + 30,
+                paddingBottom: 30
+            }}>
                 <Left>
                     <Button onPress={() => this.onMenuPress()} style={styles.menuButton} >
-                        <Icon name='menu' style={{ color: Colors.primary }} />
+                        <Icon name='menu' style={{ color: 'white' }} />
                     </Button>
                 </Left>
                 <Body>
-                    <Title style={{ color: 'black' }}>{this.props.title}</Title>
+                    <Title style={{ color: 'white', fontWeight: 'bold' }}>{this.props.title}</Title>
                 </Body>
                 <Right />
             </Header >

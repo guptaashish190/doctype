@@ -51,7 +51,6 @@ class DoctorScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: StatusBarHeight,
     paddingBottom: 20
   },
   menuButton: {

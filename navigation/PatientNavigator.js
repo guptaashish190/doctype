@@ -19,8 +19,8 @@ const SearchNavigator = createStackNavigator({
   });
 
 export default createAppContainer(createDrawerNavigator({
-  MyAppointments: MyAppointmentsScreen,
   Search: SearchNavigator,
+  MyAppointments: MyAppointmentsScreen,
   Profile: PatientScreen,
   Settings: SettingsScreen,
 }));

@@ -350,7 +350,6 @@ class DoctorDetailScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: StatusBarHeight,
     },
     basicInfo: {
         width: '90%',

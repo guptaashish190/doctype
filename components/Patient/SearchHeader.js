@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, Animated, Easing, Keyboard } from 'react-native';
+import { StyleSheet, TouchableOpacity, Animated, Easing, Keyboard, View } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Item, Input, Container, Text, Content } from 'native-base';
 import PropTypes from 'prop-types';
+import { Constants } from 'expo';
 import Colors from '../../constants/Colors';
 
 class SearchHeader extends Component {
@@ -135,20 +136,20 @@ class SearchHeader extends Component {
                     (
                         <Animated.View style={searchTextAnimatedStyle}>
                             <Button onPress={() => this.onMenuPress()} style={[styles.menuButton]} >
-                                <Icon name='menu' style={{ color: Colors.primary }} />
+                                <Icon name='menu' style={{ color: 'white' }} />
                             </Button>
                         </Animated.View>
                     )
                     : (
                         <Animated.View style={[backAnimatedStyle]} >
                             <Button onPress={() => this.onDisableSearch()} style={[styles.menuButton]} >
-                                <Icon name='md-arrow-round-back' style={{ color: Colors.primary }} />
+                                <Icon name='md-arrow-round-back' style={{ color: 'white' }} />
                             </Button>
                         </Animated.View>
                     )
 
                 }
-                <Content contentContainerStyle={styles.content}>
+                <Body style={styles.content}>
 
                     {this.state.searchEnable ?
                         (<Animated.View style={[styles.animatedSearchContainer, searchBarAnimatedStyle]}>
@@ -164,15 +165,14 @@ class SearchHeader extends Component {
                         :
                         <Animated.View style={searchTextAnimatedStyle}>
                             <TouchableOpacity onPress={() => this.onSearchEnable()}>
-                                <Text>Search</Text>
+                                <Text style={{ color: 'white', fontWeight: 'bold' }}>Search</Text>
                             </TouchableOpacity>
                         </Animated.View>
                     }
                     <TouchableOpacity onPress={() => this.onSearchEnable()}>
                         <Icon style={{ marginLeft: 10 }} name="search" />
                     </TouchableOpacity>
-                </Content>
-
+                </Body>
             </Header >
         );
     }
@@ -186,8 +186,7 @@ SearchHeader.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.headerBackground,
-        width: '100%',
+        backgroundColor: Colors.primary,
         alignItems: 'center'
     },
     content:
@@ -196,7 +195,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         height: '90%',
         alignItems: 'center',
-        width: '100%',
     },
 
     menuButton: {

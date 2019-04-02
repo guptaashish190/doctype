@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Alert, Keyboard, ScrollView } from 'react-native';
+import { StyleSheet, Alert, Keyboard, ScrollView, View } from 'react-native';
 import Axios from 'axios';
 import { Container, Content } from 'native-base';
 import shortid from 'shortid';
 
-import { StatusBarHeight } from '../../constants/Layout';
+import { Constants } from 'expo';
 import Colors from '../../constants/Colors';
 import SearchHeader from '../../components/Patient/SearchHeader';
 import config from '../../config';
@@ -44,6 +44,7 @@ class SearchScreen extends Component {
 
         return (
             <Container style={styles.container}>
+                <View style={{ backgroundColor: Colors.primary, height: Constants.statusBarHeight }} />
                 <SearchHeader onSearch={this.onSearch} title="Search" navigation={this.props.navigation} />
                 <Content contentContainerStyle={styles.content}>
                     <ScrollView style={{ width: '100%' }} contentContainerStyle={styles.scrollViewStyle}>
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: Colors.backgroundColor,
-        paddingTop: StatusBarHeight,
     },
     content: {
         paddingTop: 20,

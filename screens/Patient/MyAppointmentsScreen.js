@@ -208,8 +208,6 @@ class MyAppointmentsScreen extends Component {
             />
         </View>
     )
-
-
     render() {
         return (
             <Container style={styles.container}>
@@ -231,7 +229,6 @@ class MyAppointmentsScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.backgroundColor,
-        paddingTop: StatusBarHeight,
     },
     appointmentCard: {
         backgroundColor: 'white',
@@ -245,7 +242,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-
     },
     item: {
         padding: 5,
