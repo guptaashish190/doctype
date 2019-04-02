@@ -3,7 +3,7 @@ import { StyleSheet, NativeModules, Platform, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
 import Axios from 'axios';
-import { Container, Content, Text, Card, View } from 'native-base';
+import { Container, Content, Text, Card, View, Spinner, Toast } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import config from '../../config';
 import Colors from '../../constants/Colors';
@@ -62,11 +62,21 @@ class MyAppointmentsScreen extends Component {
     }
 
     componentWillMount() {
+        this.setState({
+            loading: true
+        });
         Axios.get(`${config.backend}/patient/getAppointments`, { params: { patientID: this.props.userID } }).then(({ data }) => {
             console.log(data);
             this.setState({
-                appointments: data.appointments
+                appointments: data.appointments,
+                loading: false
             });
+        }).catch(err => {
+            Toast.show({
+                text: "Error",
+                type: 'danger',
+                duration: 3000,
+            })
         });
     }
 
@@ -94,17 +104,21 @@ class MyAppointmentsScreen extends Component {
 
     getCardColor = status => {
         switch (status) {
-            case 'Requested':
+            case 'Request Pending':
                 return '#ffc107';
             case 'Rejected':
                 return '#dc3545';
             case 'Accepted':
                 return '#28a745';
+            case 'Finished':
+                return '#68a2ff'
             default:
                 return Colors.primary
         }
     }
 
+
+    // Returns Appointment Card
     getAppointments = () => {
         return this.state.appointments.map(appointment => (
             <View style={[styles.appointmentCard, { borderColor: this.getCardColor(appointment.status) }]} key={shortid.generate()}>
@@ -137,6 +151,7 @@ class MyAppointmentsScreen extends Component {
             <Container style={styles.container}>
                 <BasicHeader title="My Appointments" navigation={this.props.navigation} />
                 <Content style={{ width: '100%', marginTop: 20 }} contentContainerStyle={{ alignItems: 'center', flex: 1 }}>
+                    {this.state.loading ? <Spinner color={Colors.primary} /> : null}
                     {this.getAppointments()}
                 </Content>
             </Container>
@@ -155,11 +170,11 @@ const styles = StyleSheet.create({
         width: '90%',
         borderRadius: 20,
         overflow: 'hidden',
-        borderTopWidth: 1,
+        borderTopWidth: 0,
         borderRightWidth: 10,
-        borderBottomWidth: 1,
-        borderLeftWidth: 1,
-        borderColor: 'red',
+        borderBottomWidth: 0,
+        borderLeftWidth: 0,
+        borderRightColor: 'red',
         elevation: 4,
         padding: 7,
     },

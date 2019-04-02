@@ -94,7 +94,7 @@ class DoctorDetailScreen extends Component {
                 name: this.state.problemName,
                 description: this.state.problemDesc,
                 shareBio: this.state.shareBio,
-                status: 'Requested',
+                status: 'Request Pending',
                 patientID: this.props.userID,
                 doctorID: this.doctor._id
             }
