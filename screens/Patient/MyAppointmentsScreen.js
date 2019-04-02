@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, NativeModules, Platform, ScrollView } from 'react-native';
+import { StyleSheet, NativeModules, Platform, ScrollView, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
 import Axios from 'axios';
-import { Container, Content, Text, Card, View, Spinner, Toast } from 'native-base';
+import { Container, Content, Text, Card, View, Spinner, Toast, SwipeRow, Button, Icon } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import config from '../../config';
 import Colors from '../../constants/Colors';
@@ -67,13 +67,18 @@ class MyAppointmentsScreen extends Component {
         });
         Axios.get(`${config.backend}/patient/getAppointments`, { params: { patientID: this.props.userID } }).then(({ data }) => {
             console.log(data);
+            let a = data.appointments;
+            a = a.map(e => ({ ...e, key: shortid.generate() }));
             this.setState({
-                appointments: data.appointments,
+                appointments: a,
                 loading: false
             });
         }).catch(err => {
+            this.setState({
+                loading: false,
+            });
             Toast.show({
-                text: "Error",
+                text: "Error Occured",
                 type: 'danger',
                 duration: 3000,
             })
@@ -97,9 +102,9 @@ class MyAppointmentsScreen extends Component {
         const diffDays = parseInt((date2 - date1) / (1000 * 60 * 60 * 24));
         if (!diffDays) {
             const diffHours = parseInt((date2 - date1) / (1000 * 60 * 60));
-            return `${diffHours} Hours Left`
+            return diffHours > 0 ? `${diffHours} Hours Left` : null;
         }
-        return `${diffDays} Days Left`;
+        return diffDays >= 0 ? `${diffDays} Days Left` : null;
     }
 
     getCardColor = status => {
@@ -118,33 +123,69 @@ class MyAppointmentsScreen extends Component {
     }
 
 
-    // Returns Appointment Card
-    getAppointments = () => {
-        return this.state.appointments.map(appointment => (
-            <View style={[styles.appointmentCard, { borderColor: this.getCardColor(appointment.status) }]} key={shortid.generate()}>
-                <View style={[styles.item, styles.name]}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{appointment.doctorName}</Text>
-                    <Text style={{ fontWeight: 'bold', color: '#aaa', fontStyle: 'italic' }}>{this.getTimeLeftString(appointment.date)}</Text>
-                </View>
-                <View style={[styles.item]}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{appointment.name}</Text>
-                </View>
-                <View style={[styles.item]}>
-                    <Text style={{ fontSize: 15, color: '#aaa', fontStyle: 'italic' }}>{appointment.description}</Text>
-                </View>
-                <View style={[styles.item, { flexDirection: 'row' }]}>
-                    <Text style={{ paddingRight: 10, borderRightWidth: 1, borderRightColor: '#ccc' }}>{new Date(appointment.date).toLocaleDateString()}</Text>
-                    <Text style={{ paddingLeft: 10 }}>{this.timeToString(appointment.date)}</Text>
-                </View>
-                <View style={[styles.item]}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontWeight: 'bold' }}>Status:</Text>
-                        <Text style={{ color: this.getCardColor(appointment.status), fontWeight: 'bold' }}> {appointment.status}</Text>
-                    </View>
+    renderAppointment = appointment => (
+        <View style={{ width: '100%' }}>
+            <View style={[styles.item, styles.name]}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{appointment.doctorName}</Text>
+                <Text style={{ fontWeight: 'bold', color: '#aaa', fontStyle: 'italic' }}>{this.getTimeLeftString(appointment.date)}</Text>
+            </View>
+            <View style={[styles.item]}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{appointment.name}</Text>
+            </View>
+            <View style={[styles.item]}>
+                <Text style={{ fontSize: 15, color: '#aaa', fontStyle: 'italic' }}>{appointment.description}</Text>
+            </View>
+            <View style={[styles.item, { flexDirection: 'row' }]}>
+                <Text style={{ paddingRight: 10, borderRightWidth: 1, borderRightColor: '#ccc' }}>{new Date(appointment.date).toLocaleDateString()}</Text>
+                <Text style={{ paddingLeft: 10 }}>{this.timeToString(appointment.date)}</Text>
+            </View>
+            <View style={[styles.item]}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={{ fontWeight: 'bold' }}>Status:</Text>
+                    <Text style={{ color: this.getCardColor(appointment.status), fontWeight: 'bold' }}> {appointment.status}</Text>
                 </View>
             </View>
-        ));
-    }
+        </View>
+    )
+
+    // Returns Appointment Card
+    // getAppointments = () => {
+    //     return this.state.appointments.map(appointment => (
+    //         <SwipeRow
+    //             leftOpenValue={75}
+    //             rightOpenValue={-75}
+    //             left={
+    //                 <Button success onPress={() => alert(item.value)} >
+    //                     <Icon active name="add" />
+    //                 </Button>
+    //             }
+    //             body={() => this.renderAppointment(appointment)}
+    //             right={
+    //                 <Button danger onPress={() => this.removeItem(item.key)}>
+    //                     <Icon active name="trash" />
+    //                 </Button>
+    //             }
+    //             style={styles.appointmentCard}
+    //         />
+    //     ));
+    // }
+
+    renderSwipeableRow = appointment => (
+        <View style={[styles.swipeCont, { borderRightColor: this.getCardColor(appointment.status), }]}>
+            <SwipeRow
+                rightOpenValue={-75}
+                leftOpenValue={0}
+                body={this.renderAppointment(appointment)}
+                right={
+                    <Button style={{ backgroundColor: this.getCardColor(appointment.status) }} onPress={() => this.removeItem(item.key)}>
+                        <Icon active name="trash" />
+                    </Button>
+                }
+                style={{ width: '100%', backgroundColor: 'white', paddingRight: 0 }}
+            />
+        </View>
+    )
+
 
     render() {
         return (
@@ -152,7 +193,12 @@ class MyAppointmentsScreen extends Component {
                 <BasicHeader title="My Appointments" navigation={this.props.navigation} />
                 <Content style={{ width: '100%', marginTop: 20 }} contentContainerStyle={{ alignItems: 'center', flex: 1 }}>
                     {this.state.loading ? <Spinner color={Colors.primary} /> : null}
-                    {this.getAppointments()}
+                    <FlatList
+                        style={{ width: '100%' }}
+                        contentContainerStyle={{ alignItems: 'center', flex: 1 }}
+                        data={this.state.appointments}
+                        renderItem={({ item }) => this.renderSwipeableRow(item)}
+                    />
                 </Content>
             </Container>
         );
@@ -166,17 +212,9 @@ const styles = StyleSheet.create({
     },
     appointmentCard: {
         backgroundColor: 'white',
-        marginTop: 20,
-        width: '90%',
         borderRadius: 20,
         overflow: 'hidden',
-        borderTopWidth: 0,
-        borderRightWidth: 10,
-        borderBottomWidth: 0,
-        borderLeftWidth: 0,
-        borderRightColor: 'red',
         elevation: 4,
-        padding: 7,
     },
     name: {
         paddingBottom: 10,
@@ -187,8 +225,18 @@ const styles = StyleSheet.create({
 
     },
     item: {
-        padding: 5
+        padding: 5,
+        marginLeft: 10,
+        marginRight: 10
     },
+    swipeCont: {
+        elevation: 4,
+        marginTop: 20,
+        borderRadius: 20,
+        overflow: 'hidden',
+        width: '90%',
+        borderRightWidth: 10
+    }
 });
 
 const mapStateToProps = state => ({
