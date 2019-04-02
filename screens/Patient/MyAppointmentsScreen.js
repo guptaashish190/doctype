@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, NativeModules, Platform, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, NativeModules, Platform, ScrollView, FlatList, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
 import Axios from 'axios';
@@ -62,6 +62,9 @@ class MyAppointmentsScreen extends Component {
     }
 
     componentWillMount() {
+        this.getAppointments();
+    }
+    getAppointments = () => {
         this.setState({
             loading: true
         });
@@ -102,7 +105,13 @@ class MyAppointmentsScreen extends Component {
         const diffDays = parseInt((date2 - date1) / (1000 * 60 * 60 * 24));
         if (!diffDays) {
             const diffHours = parseInt((date2 - date1) / (1000 * 60 * 60));
+            if (diffHours === 1) {
+                return diffHours > 0 ? `${diffHours} Hour Left` : null;
+            }
             return diffHours > 0 ? `${diffHours} Hours Left` : null;
+        }
+        if (diffDays === 1) {
+            return diffDays >= 0 ? `${diffDays} Day Left` : null;
         }
         return diffDays >= 0 ? `${diffDays} Days Left` : null;
     }
@@ -122,6 +131,42 @@ class MyAppointmentsScreen extends Component {
         }
     }
 
+    deleteAppointment = (appID) => {
+        Axios.delete(`${config.backend}/patient/deleteAppointment`, { data: { appointmentID: appID } }).then(({ data }) => {
+            if (data.success) {
+                Toast.show({
+                    text: "Appointment Deleted",
+                    type: 'success',
+                    duration: 3000,
+                })
+                this.getAppointments();
+            } else {
+                Toast.show({
+                    text: "Error deleting appointment",
+                    type: 'danger',
+                    duration: 3000,
+                })
+            }
+        }).catch(() => {
+            Toast.show({
+                text: "Error deleting appointment",
+                type: 'danger',
+                duration: 3000,
+            })
+        });
+    }
+
+    alertDelete = (appID) => {
+        Alert.alert(
+            'Delete Appointment',
+            'Are you sure you want to delete this appointment?',
+            [
+                { text: 'Confirm', onPress: () => this.deleteAppointment(appID) },
+                { text: 'Cancel', onPress: () => console.log('OK Pressed') },
+            ],
+            { cancelable: true },
+        );
+    }
 
     renderAppointment = appointment => (
         <View style={{ width: '100%' }}>
@@ -148,36 +193,14 @@ class MyAppointmentsScreen extends Component {
         </View>
     )
 
-    // Returns Appointment Card
-    // getAppointments = () => {
-    //     return this.state.appointments.map(appointment => (
-    //         <SwipeRow
-    //             leftOpenValue={75}
-    //             rightOpenValue={-75}
-    //             left={
-    //                 <Button success onPress={() => alert(item.value)} >
-    //                     <Icon active name="add" />
-    //                 </Button>
-    //             }
-    //             body={() => this.renderAppointment(appointment)}
-    //             right={
-    //                 <Button danger onPress={() => this.removeItem(item.key)}>
-    //                     <Icon active name="trash" />
-    //                 </Button>
-    //             }
-    //             style={styles.appointmentCard}
-    //         />
-    //     ));
-    // }
-
     renderSwipeableRow = appointment => (
         <View style={[styles.swipeCont, { borderRightColor: this.getCardColor(appointment.status), }]}>
             <SwipeRow
                 rightOpenValue={-75}
-                leftOpenValue={0}
                 body={this.renderAppointment(appointment)}
+                disableRightSwipe
                 right={
-                    <Button style={{ backgroundColor: this.getCardColor(appointment.status) }} onPress={() => this.removeItem(item.key)}>
+                    <Button style={{ backgroundColor: this.getCardColor(appointment.status) }} onPress={() => this.alertDelete(appointment._id)}>
                         <Icon active name="trash" />
                     </Button>
                 }
