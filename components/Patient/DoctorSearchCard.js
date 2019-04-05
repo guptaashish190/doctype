@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
-import { StyleSheet, Animated, Easing, TouchableOpacity } from 'react-native';
-import { Card, CardItem, Text } from 'native-base';
+import { StyleSheet, Animated, Easing, TouchableOpacity, View } from 'react-native';
+import { Card, CardItem, Text, Thumbnail } from 'native-base';
 import { StatusBarHeight } from '../../constants/Layout';
 import Colors from '../../constants/Colors';
 class DoctorSearchCard extends Component {
@@ -37,9 +37,13 @@ class DoctorSearchCard extends Component {
                 <Animated.View style={animatedContStyle}>
                     <Card listItemPadding style={styles.container}>
                         <CardItem style={[styles.head, styles.item]}>
-                            <Text style={styles.headText}>
-                                {this.props.doctor.basic.name}
-                            </Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
+                                <Thumbnail small source={{ uri: this.props.doctor.appSpec ? this.props.doctor.appSpec.profilePicture.local : 'https://i.stack.imgur.com/l60Hf.png' }} />
+                                <Text style={styles.headText}>
+                                    {this.props.doctor.basic.name}
+                                </Text>
+
+                            </View>
                             <Text style={[styles.infoText, styles.right]}>
                                 {this.props.doctor.qualifications ? this.props.doctor.qualifications[0] : '-'}
                             </Text>

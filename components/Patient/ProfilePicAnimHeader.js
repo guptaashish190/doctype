@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Animated } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import PropTypes from 'prop-types';
+import { Constants } from 'expo';
 import Colors from '../../constants/Colors';
 
 class ProfilePicAnimHeader extends Component {
@@ -25,14 +26,19 @@ class ProfilePicAnimHeader extends Component {
             }]
         }
         return (
-            <Header style={{ backgroundColor: Colors.headerBackground, overflow: 'hidden' }}>
+            <Header style={{
+                backgroundColor: Colors.primary,
+                paddingTop: Constants.statusBarHeight + 30,
+                paddingBottom: 30,
+                overflow: 'hidden'
+            }}>
                 <Left>
                     <Button onPress={() => this.onMenuPress()} style={styles.menuButton} >
-                        <Icon name='menu' style={{ color: Colors.primary }} />
+                        <Icon name='menu' style={{ color: 'white' }} />
                     </Button>
                 </Left>
                 <Body>
-                    <Title style={{ color: 'black' }}>{this.props.title}</Title>
+                    <Title style={{ color: 'white', fontWeight: 'bold' }}>{this.props.title}</Title>
                 </Body>
                 <Right>
                     <Animated.Image source={{ uri: this.props.ppImageUri }} style={[ImageAnimatedStyle, {

@@ -170,7 +170,7 @@ class SearchHeader extends Component {
                         </Animated.View>
                     }
                     <TouchableOpacity onPress={() => this.onSearchEnable()}>
-                        <Icon style={{ marginLeft: 10 }} name="search" />
+                        <Icon style={{ marginLeft: 10, color: 'white' }} name="search" />
                     </TouchableOpacity>
                 </Body>
             </Header >
